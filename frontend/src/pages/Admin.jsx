@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 const API_URL = "https://polodieu-shop.onrender.com";
 
 function Admin() {
-  const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
   const [authorized, setAuthorized] = useState(false);
   const [password, setPassword] = useState("");
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
 
-  function getAuthHeaders() {
+  function authHeaders() {
     return {
       "Content-Type": "application/json",
       Authorization: localStorage.getItem("admin_token")
@@ -38,11 +38,10 @@ function Admin() {
       if (!res.ok) throw new Error();
 
       const data = await res.json();
-
       localStorage.setItem("admin_token", data.token);
       setAuthorized(true);
     } catch {
-      alert("Wrong password");
+      alert("Admin login failed");
     }
   }
 
@@ -60,7 +59,8 @@ function Admin() {
     });
 
     if (!res.ok) {
-      alert("Unauthorized - login again");
+      alert("Unauthorized. Please login again.");
+      localStorage.removeItem("admin_token");
       setAuthorized(false);
       return;
     }
@@ -70,6 +70,8 @@ function Admin() {
   }
 
   async function deleteProduct(id) {
+    if (!confirm("Delete this product?")) return;
+
     await fetch(`${API_URL}/products/${id}`, {
       method: "DELETE",
       headers: {
@@ -83,7 +85,7 @@ function Admin() {
   async function updateOrderStatus(id, status) {
     await fetch(`${API_URL}/orders/${id}`, {
       method: "PUT",
-      headers: getAuthHeaders(),
+      headers: authHeaders(),
       body: JSON.stringify({ status })
     });
 
@@ -92,14 +94,17 @@ function Admin() {
 
   if (!authorized) {
     return (
-      <div style={{ padding: 50 }}>
-        <h2>Admin Login</h2>
+      <div style={{ padding: "40px", fontFamily: "Arial" }}>
+        <h1>Admin Login</h1>
 
         <input
           type="password"
           placeholder="Enter admin password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") login();
+          }}
         />
 
         <br /><br />
@@ -110,7 +115,7 @@ function Admin() {
   }
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: "30px", fontFamily: "Arial" }}>
       <h1>Admin Panel</h1>
 
       <button
@@ -124,18 +129,35 @@ function Admin() {
 
       <h2>Products</h2>
 
-      {products.map(p => (
-        <div key={p.id}>
-          <b>{p.name}</b> - {p.price} FCFA
+      {products.map((p) => (
+        <div key={p.id} style={{ border: "1px solid #ccc", padding: 15, marginBottom: 10 }}>
+          <h3>{p.name}</h3>
+
+          {p.image && (
+            <img
+              src={p.image}
+              alt={p.name}
+              style={{ width: 120, borderRadius: 8 }}
+            />
+          )}
+
+          <p>{Number(p.price).toLocaleString()} FCFA</p>
+          <p>Category: {p.category}</p>
+          <p>Stock: {p.stock}</p>
+
           <button onClick={() => deleteProduct(p.id)}>Delete</button>
         </div>
       ))}
 
       <h2>Orders</h2>
 
-      {orders.map(order => (
-        <div key={order.id}>
-          <p>Order #{order.id} - {order.status}</p>
+      {orders.map((order) => (
+        <div key={order.id} style={{ border: "1px solid #ccc", padding: 15, marginBottom: 10 }}>
+          <h3>Order #{order.id}</h3>
+
+          <p>Total: {Number(order.total).toLocaleString()} FCFA</p>
+          <p>Phone: {order.phone}</p>
+          <p>Address: {order.address}</p>
 
           <select
             value={order.status}

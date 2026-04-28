@@ -20,18 +20,35 @@ function checkAuth(req, res, next) {
 /* 📦 GET all products (PUBLIC) */
 router.get("/", async (req, res) => {
   try {
-    const products = await prisma.product.findMany();
+    const products = await prisma.product.findMany({
+      orderBy: { id: "desc" }
+    });
+
     res.json(products);
   } catch (error) {
     res.status(500).json({ error: "Failed to load products" });
   }
 });
 
-/* ➕ CREATE product (PROTECTED) */
+/* ➕ CREATE product (PROTECTED + VALIDATED) */
 router.post("/", checkAuth, async (req, res) => {
   try {
+    const { name, price, category, image, stock } = req.body;
+
+    if (!name || !price || !stock) {
+      return res.status(400).json({
+        error: "Name, price, and stock are required"
+      });
+    }
+
     const product = await prisma.product.create({
-      data: req.body
+      data: {
+        name,
+        price: Number(price),
+        category: category || "",
+        image: image || "",
+        stock: Number(stock)
+      }
     });
 
     res.json(product);
@@ -59,12 +76,26 @@ router.delete("/:id", checkAuth, async (req, res) => {
   }
 });
 
-/* ✏️ UPDATE product (PROTECTED) */
+/* ✏️ UPDATE product (PROTECTED + VALIDATED) */
 router.put("/:id", checkAuth, async (req, res) => {
   try {
+    const { name, price, category, image, stock } = req.body;
+
+    if (!name || !price || !stock) {
+      return res.status(400).json({
+        error: "Name, price, and stock are required"
+      });
+    }
+
     const product = await prisma.product.update({
       where: { id: Number(req.params.id) },
-      data: req.body
+      data: {
+        name,
+        price: Number(price),
+        category: category || "",
+        image: image || "",
+        stock: Number(stock)
+      }
     });
 
     res.json(product);

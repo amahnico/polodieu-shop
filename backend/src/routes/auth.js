@@ -32,9 +32,10 @@ router.post("/register", async (req, res) => {
         role: user.role
       }
     });
-  } catch (error) {
-    res.status(400).json({ error: "User already exists or invalid data" });
-  }
+ } catch (error) {
+  console.log("LOGIN ERROR:", error);
+  res.status(500).json({ error: error.message });
+}
 });
 
 router.post("/login", async (req, res) => {

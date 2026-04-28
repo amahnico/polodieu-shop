@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Admin from "./Admin";
-import Login from "./Login";
-// import other pages if you have them
+import Admin from "./pages/Admin";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -11,11 +10,11 @@ function App() {
         {/* User login (old system) */}
         <Route path="/login" element={<Login />} />
 
-        {/* Admin panel (NEW) */}
+        {/* Admin panel (NEW secured) */}
         <Route path="/admin" element={<Admin />} />
 
-        {/* Optional: redirect root to admin or homepage */}
-        <Route path="/" element={<Admin />} />
+        {/* Default route */}
+        <Route path="/" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

@@ -7,6 +7,7 @@ function Admin() {
   const [password, setPassword] = useState("");
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [editing, setEditing] = useState(null);
 
   function authHeaders() {
     return {
@@ -59,7 +60,6 @@ function Admin() {
     });
 
     if (!res.ok) {
-      alert("Unauthorized. Please login again.");
       localStorage.removeItem("admin_token");
       setAuthorized(false);
       return;
@@ -67,6 +67,38 @@ function Admin() {
 
     const data = await res.json();
     setOrders(data);
+  }
+
+  function startEdit(product) {
+    setEditing({ ...product });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function saveEdit() {
+    if (!editing.name || !editing.price || !editing.stock) {
+      alert("Name, price, and stock are required");
+      return;
+    }
+
+    const res = await fetch(`${API_URL}/products/${editing.id}`, {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify({
+        name: editing.name,
+        price: Number(editing.price),
+        category: editing.category,
+        image: editing.image,
+        stock: Number(editing.stock)
+      })
+    });
+
+    if (!res.ok) {
+      alert("Failed to update product");
+      return;
+    }
+
+    setEditing(null);
+    loadProducts();
   }
 
   async function deleteProduct(id) {
@@ -127,6 +159,58 @@ function Admin() {
         Logout
       </button>
 
+      {editing && (
+        <div style={{ border: "2px solid green", padding: 20, marginTop: 20 }}>
+          <h2>Edit Product</h2>
+
+          <input
+            placeholder="Name"
+            value={editing.name || ""}
+            onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+          />
+          <br /><br />
+
+          <input
+            type="number"
+            placeholder="Price"
+            value={editing.price || ""}
+            onChange={(e) => setEditing({ ...editing, price: e.target.value })}
+          />
+          <br /><br />
+
+          <input
+            placeholder="Category"
+            value={editing.category || ""}
+            onChange={(e) => setEditing({ ...editing, category: e.target.value })}
+          />
+          <br /><br />
+
+          <input
+            placeholder="Image URL"
+            value={editing.image || ""}
+            onChange={(e) => setEditing({ ...editing, image: e.target.value })}
+          />
+          <br /><br />
+
+          <input
+            type="number"
+            placeholder="Stock"
+            value={editing.stock || ""}
+            onChange={(e) => setEditing({ ...editing, stock: e.target.value })}
+          />
+          <br /><br />
+
+          <button onClick={saveEdit}>Save</button>
+
+          <button
+            onClick={() => setEditing(null)}
+            style={{ marginLeft: 10 }}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+
       <h2>Products</h2>
 
       {products.map((p) => (
@@ -145,7 +229,14 @@ function Admin() {
           <p>Category: {p.category}</p>
           <p>Stock: {p.stock}</p>
 
-          <button onClick={() => deleteProduct(p.id)}>Delete</button>
+          <button onClick={() => startEdit(p)}>Edit</button>
+
+          <button
+            onClick={() => deleteProduct(p.id)}
+            style={{ marginLeft: 10 }}
+          >
+            Delete
+          </button>
         </div>
       ))}
 

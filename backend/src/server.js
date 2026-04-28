@@ -16,8 +16,11 @@ dotenv.config();
 
 const app = express();
 
-const ADMIN_HASH =
-  "$2b$10$SJ1VF.kV1bq841V3T64ZaeMt6GiZnI6Uaias9PO5G/QZu//HBJU4y";
+/*
+  🔐 IMPORTANT:
+  Replace this hash with the one you generated using hash.js
+*/
+const ADMIN_HASH = "$2b$10$SJ1VF.kV1bq841V3T64ZaeMt6GiZnI6Uaias9PO5G/QZu//HBJU4y";
 
 app.use(cors());
 app.use(express.json());
@@ -26,13 +29,17 @@ app.use(express.json());
 app.post("/admin/login", async (req, res) => {
   const { password } = req.body;
 
-  const isValid = await bcrypt.compare(password, ADMIN_HASH);
+  try {
+    const isValid = await bcrypt.compare(password, ADMIN_HASH);
 
-  if (!isValid) {
-    return res.status(401).json({ error: "Wrong password" });
+    if (!isValid) {
+      return res.status(401).json({ error: "Wrong password" });
+    }
+
+    res.json({ token: "secure-admin-token" });
+  } catch (error) {
+    res.status(500).json({ error: "Login error" });
   }
-
-  res.json({ token: "secure-admin-token" });
 });
 
 // routes

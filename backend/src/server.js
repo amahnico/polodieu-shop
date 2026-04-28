@@ -1,25 +1,28 @@
-
-const ADMIN_HASH = "$2b$10$SJ1VF.kV1bq841V3T64ZaeMt6GiZnI6Uaias9PO5G/QZu//HBJU4y";import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import pkg from '@prisma/client';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import pkg from "@prisma/client";
+import bcrypt from "bcrypt";
 
 import productsRoute from "./routes/products.js";
 import ordersRoute from "./routes/orders.js";
 import authRoute from "./routes/auth.js";
 import paymentRoute from "./routes/payment.js";
-import bcrypt from "bcrypt";
 
-const ADMIN_HASH = "$2b$10$SJ1VF.kV1bq841V3T64ZaeMt6GiZnI6Uaias9PO5G/QZu//HBJU4y";
 const { PrismaClient } = pkg;
+const prisma = new PrismaClient();
 
 dotenv.config();
 
-const app = express(); // ✅ create app FIRST
-const prisma = new PrismaClient();
+const app = express();
+
+const ADMIN_HASH =
+  "$2b$10$SJ1VF.kV1bq841V3T64ZaeMt6GiZnI6Uaias9PO5G/QZu//HBJU4y";
 
 app.use(cors());
 app.use(express.json());
+
+// ✅ ADMIN LOGIN
 app.post("/admin/login", async (req, res) => {
   const { password } = req.body;
 
@@ -31,14 +34,15 @@ app.post("/admin/login", async (req, res) => {
 
   res.json({ token: "secure-admin-token" });
 });
+
 // routes
 app.use("/products", productsRoute);
 app.use("/orders", ordersRoute);
 app.use("/auth", authRoute);
-app.use("/payment", paymentRoute); // ✅ now correct place
+app.use("/payment", paymentRoute);
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Polodieu API is running' });
+app.get("/", (req, res) => {
+  res.json({ message: "Polodieu API is running" });
 });
 
 const port = process.env.PORT || 4000;

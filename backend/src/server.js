@@ -6,7 +6,8 @@ import pkg from '@prisma/client';
 import productsRoute from "./routes/products.js";
 import ordersRoute from "./routes/orders.js";
 import authRoute from "./routes/auth.js";
-
+import paymentRoute from "./routes/payment.js";
+app.use("/payment", paymentRoute);
 const { PrismaClient } = pkg;
 
 dotenv.config();

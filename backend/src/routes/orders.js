@@ -6,37 +6,56 @@ const prisma = new PrismaClient();
 
 const router = express.Router();
 
-// GET all orders
-router.get("/", async (req, res) => {
-  const orders = await prisma.order.findMany({
-    include: {
-      items: {
-        include: {
-          product: true
+/* 🔐 AUTH MIDDLEWARE */
+function checkAuth(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (token !== "secure-admin-token") {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  next();
+}
+
+/* 📦 GET all orders (PROTECTED - admin only) */
+router.get("/", checkAuth, async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        items: {
+          include: {
+            product: true
+          }
         }
+      },
+      orderBy: {
+        createdAt: "desc"
       }
-    },
-    orderBy: {
-      createdAt: "desc"
-    }
-  });
+    });
 
-  res.json(orders);
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to load orders" });
+  }
 });
 
-// UPDATE order status
-router.put("/:id", async (req, res) => {
-  const { status } = req.body;
+/* ✏️ UPDATE order status (PROTECTED) */
+router.put("/:id", checkAuth, async (req, res) => {
+  try {
+    const { status } = req.body;
 
-  const order = await prisma.order.update({
-    where: { id: Number(req.params.id) },
-    data: { status }
-  });
+    const order = await prisma.order.update({
+      where: { id: Number(req.params.id) },
+      data: { status }
+    });
 
-  res.json(order);
+    res.json(order);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
-// CREATE order
+/* 🛒 CREATE order (PUBLIC) */
 router.post("/", async (req, res) => {
   try {
     const { phone, address, items } = req.body;

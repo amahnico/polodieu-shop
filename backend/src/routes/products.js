@@ -6,14 +6,29 @@ const prisma = new PrismaClient();
 
 const router = express.Router();
 
-// GET all products
+/* 🔐 AUTH MIDDLEWARE */
+function checkAuth(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (token !== "secure-admin-token") {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  next();
+}
+
+/* 📦 GET all products (PUBLIC) */
 router.get("/", async (req, res) => {
-  const products = await prisma.product.findMany();
-  res.json(products);
+  try {
+    const products = await prisma.product.findMany();
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to load products" });
+  }
 });
 
-// CREATE product
-router.post("/", async (req, res) => {
+/* ➕ CREATE product (PROTECTED) */
+router.post("/", checkAuth, async (req, res) => {
   try {
     const product = await prisma.product.create({
       data: req.body
@@ -25,8 +40,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-// DELETE product
-router.delete("/:id", async (req, res) => {
+/* ❌ DELETE product (PROTECTED) */
+router.delete("/:id", checkAuth, async (req, res) => {
   const productId = Number(req.params.id);
 
   try {
@@ -44,8 +59,8 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// UPDATE product
-router.put("/:id", async (req, res) => {
+/* ✏️ UPDATE product (PROTECTED) */
+router.put("/:id", checkAuth, async (req, res) => {
   try {
     const product = await prisma.product.update({
       where: { id: Number(req.params.id) },

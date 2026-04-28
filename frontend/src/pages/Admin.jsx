@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+const API_URL = "https://polodieu-shop.onrender.com";
+
 function Admin() {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -19,13 +21,13 @@ function Admin() {
   }, []);
 
   async function loadProducts() {
-    const res = await fetch("http://localhost:4000/products");
+    const res = await fetch(`${API_URL}/products`);
     const data = await res.json();
     setProducts(data);
   }
 
   async function loadOrders() {
-    const res = await fetch("http://localhost:4000/orders");
+    const res = await fetch(`${API_URL}/orders`);
     const data = await res.json();
     setOrders(data);
   }
@@ -35,6 +37,7 @@ function Admin() {
 
     formData.append("file", file);
     formData.append("upload_preset", "polodieu_upload");
+
     const res = await fetch(
       "https://api.cloudinary.com/v1_1/dhaq7puzh/image/upload",
       {
@@ -59,7 +62,7 @@ function Admin() {
   }
 
   async function createProduct() {
-    await fetch("http://localhost:4000/products", {
+    await fetch(`${API_URL}/products`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -89,7 +92,7 @@ function Admin() {
   }
 
   async function saveProduct() {
-    await fetch(`http://localhost:4000/products/${editing.id}`, {
+    await fetch(`${API_URL}/products/${editing.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editing)
@@ -103,7 +106,7 @@ function Admin() {
   async function deleteProduct(id) {
     if (!confirm("Delete this product?")) return;
 
-    await fetch(`http://localhost:4000/products/${id}`, {
+    await fetch(`${API_URL}/products/${id}`, {
       method: "DELETE"
     });
 
@@ -112,7 +115,7 @@ function Admin() {
   }
 
   async function markAsPaid(id) {
-    await fetch(`http://localhost:4000/orders/${id}`, {
+    await fetch(`${API_URL}/orders/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "PAID" })

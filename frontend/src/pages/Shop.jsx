@@ -20,9 +20,19 @@ function Shop() {
   }
 
   function addToCart(product) {
+    if (product.stock <= 0) {
+      alert("Out of stock");
+      return;
+    }
+
     const found = cart.find((item) => item.id === product.id);
 
     if (found) {
+      if (found.quantity >= product.stock) {
+        alert("Cannot add more than available stock");
+        return;
+      }
+
       setCart(
         cart.map((item) =>
           item.id === product.id
@@ -43,11 +53,20 @@ function Shop() {
 
   function changeQuantity(id, amount) {
     setCart(
-      cart.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + amount) }
-          : item
-      )
+      cart.map((item) => {
+        if (item.id !== id) return item;
+
+        const nextQuantity = item.quantity + amount;
+
+        if (nextQuantity < 1) return item;
+
+        if (nextQuantity > item.stock) {
+          alert("Cannot add more than available stock");
+          return item;
+        }
+
+        return { ...item, quantity: nextQuantity };
+      })
     );
   }
 
@@ -94,6 +113,7 @@ function Shop() {
     setPhone("");
     setAddress("");
     setCartOpen(false);
+    loadProducts();
   }
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -127,8 +147,16 @@ function Shop() {
             <p style={styles.muted}>{p.category || "No category"}</p>
             <p style={styles.muted}>Stock: {p.stock}</p>
 
-            <button style={styles.primaryBtn} onClick={() => addToCart(p)}>
-              Add to Cart
+            <button
+              style={{
+                ...styles.primaryBtn,
+                opacity: p.stock <= 0 ? 0.5 : 1,
+                cursor: p.stock <= 0 ? "not-allowed" : "pointer"
+              }}
+              disabled={p.stock <= 0}
+              onClick={() => addToCart(p)}
+            >
+              {p.stock <= 0 ? "Out of Stock" : "Add to Cart"}
             </button>
           </div>
         ))}
@@ -164,6 +192,8 @@ function Shop() {
                         <p style={styles.price}>
                           {(Number(item.price) * item.quantity).toLocaleString()} FCFA
                         </p>
+
+                        <p style={styles.muted}>Available: {item.stock}</p>
 
                         <div style={styles.qtyRow}>
                           <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, -1)}>

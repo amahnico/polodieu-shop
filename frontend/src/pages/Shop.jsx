@@ -196,7 +196,7 @@ const demoProducts = [
   {
     id: "tv-samsung",
     name: "Samsung Smart TV 43\"",
-    category: "Electronics",
+    category: "Smart TVs",
     price: 160000,
     stock: 8,
     image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80"
@@ -204,7 +204,7 @@ const demoProducts = [
   {
     id: "tv-lg",
     name: "LG Smart TV 50\"",
-    category: "Electronics",
+    category: "Smart TVs",
     price: 220000,
     stock: 6,
     image: "https://images.unsplash.com/photo-1601944177325-f8867652837f?auto=format&fit=crop&w=900&q=80"
@@ -358,6 +358,7 @@ const demoProducts = [
 ];
 const defaultCategories = [
   "ALL",
+   "Smart TVs",
   "Phones and Tablets",
   "Apple",
   "Informatique",

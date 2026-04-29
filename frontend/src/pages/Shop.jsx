@@ -480,7 +480,7 @@ function Shop() {
       </nav>
 
       <main style={styles.layout}>
-        <aside style={styles.sidebar}>
+        <aside style={{ ...styles.sidebar, position: window.innerWidth < 768 ? "static" : "sticky" }}>
           <h3 style={styles.sidebarTitle}>Categories</h3>
 
           {categories.map((cat) => (
@@ -765,7 +765,7 @@ const styles = {
     background: "white",
     padding: "18px 24px",
     display: "grid",
-    gridTemplateColumns: "220px 1fr 130px",
+    gridTemplateColumns: window.innerWidth < 768 ? "1fr" : "220px 1fr 130px",
     gap: "18px",
     alignItems: "center",
     boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
@@ -831,7 +831,7 @@ const styles = {
     margin: "22px auto",
     padding: "0 18px",
     display: "grid",
-    gridTemplateColumns: "250px 1fr",
+    gridTemplateColumns: window.innerWidth < 768 ? "1fr" : "250px 1fr",
     gap: "20px"
   },
   sidebar: {

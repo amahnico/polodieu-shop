@@ -3,244 +3,67 @@ import { useEffect, useState } from "react";
 const API_URL = "https://polodieu-shop.onrender.com";
 const WHATSAPP_NUMBER = "237651325289";
 
+function getDiscount(product) {
+  return 10 + (product.name.length % 15);
+}
+
+function getOldPrice(product) {
+  const discount = getDiscount(product);
+  return Math.round(Number(product.price) / (1 - discount / 100));
+}
+
+function getRating(product) {
+  return (4 + (product.name.length % 10) / 10).toFixed(1);
+}
+
 const promoSlides = [
   {
     title: "Big Tech Deals",
-    text: "Phones, laptops, accessories and electronics at great prices.",
-    image: "https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?auto=format&fit=crop&w=1600&q=80"
+    text: "Smart TVs, soundbars, appliances and home essentials.",
+    image:
+      "https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?auto=format&fit=crop&w=1600&q=80"
   },
   {
-    title: "Home Essentials",
-    text: "Upgrade your home with appliances, office items and tools.",
-    image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1600&q=80"
+    title: "Home Appliances",
+    text: "Upgrade your home with quality appliances and furniture.",
+    image:
+      "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1600&q=80"
   },
   {
-    title: "Fashion & Beauty",
-    text: "Shop stylish fashion, beauty and wellness products.",
-    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&q=80"
+    title: "Office & Home",
+    text: "Office chairs, tables, TV stands and dining sets.",
+    image:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80"
   }
 ];
 
 const demoProducts = [
   {
-    id: "demo-phone-1",
-    name: "Tecno Spark Smartphone",
-    category: "Phones and Tablets",
-    price: 105000,
-    stock: 15,
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-phone-2",
-    name: "Android Tablet 10 Inch",
-    category: "Phones and Tablets",
-    price: 85000,
-    stock: 10,
-    image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-apple-1",
-    name: "iPhone 13",
-    category: "Apple",
-    price: 350000,
-    stock: 7,
-    image: "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-apple-2",
-    name: "MacBook Air",
-    category: "Apple",
-    price: 650000,
-    stock: 5,
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-computer-1",
-    name: "HP Laptop Core i5",
-    category: "Informatique",
-    price: 280000,
-    stock: 8,
-    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-computer-2",
-    name: "Wireless Keyboard & Mouse",
-    category: "Informatique",
-    price: 18000,
-    stock: 20,
-    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-gaming-1",
-    name: "Gaming Controller",
-    category: "Gaming",
-    price: 25000,
-    stock: 12,
-    image: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-gaming-2",
-    name: "Gaming Headset",
-    category: "Gaming",
-    price: 30000,
-    stock: 10,
-    image: "https://images.unsplash.com/photo-1599669454699-248893623440?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-appliance-1",
-    name: "Double Door Refrigerator",
-    category: "Home Appliances",
-    price: 220000,
-    stock: 4,
-    image: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-appliance-2",
-    name: "Washing Machine",
-    category: "Home Appliances",
-    price: 180000,
-    stock: 3,
-    image: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-small-1",
-    name: "Electric Blender",
-    category: "Small Appliances",
-    price: 25000,
-    stock: 18,
-    image: "https://images.unsplash.com/photo-1585237672814-8f85a8118bf5?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-small-2",
-    name: "Electric Kettle",
-    category: "Small Appliances",
-    price: 12000,
-    stock: 25,
-    image: "https://images.unsplash.com/photo-1571552879083-e93b6ea70d1d?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-electronics-1",
-    name: "32 Inch Smart TV",
-    category: "Electronics",
-    price: 85000,
-    stock: 9,
-    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-electronics-2",
-    name: "Bluetooth Speaker",
-    category: "Electronics",
-    price: 18000,
-    stock: 16,
-    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-network-1",
-    name: "WiFi Router",
-    category: "Network & Telecom",
-    price: 28000,
-    stock: 14,
-    image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-security-1",
-    name: "CCTV Security Camera",
-    category: "Security",
-    price: 35000,
-    stock: 8,
-    image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-office-1",
-    name: "Office Chair",
-    category: "Home & Office",
-    price: 45000,
-    stock: 11,
-    image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-tools-1",
-    name: "Tool Box Set",
-    category: "Tools & Equipment",
-    price: 30000,
-    stock: 10,
-    image: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-market-1",
-    name: "Grocery Pack",
-    category: "Supermarket",
-    price: 15000,
-    stock: 30,
-    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-fashion-1",
-    name: "Classic Sneakers",
-    category: "Fashion",
-    price: 25000,
-    stock: 13,
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "demo-beauty-1",
-    name: "Beauty Care Set",
-    category: "Beauty & Wellness",
-    price: 18000,
-    stock: 15,
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80"
- },
-  {
     id: "tv-samsung",
-    name: "Samsung Smart TV 43\"",
+    name: 'Samsung Smart TV 43"',
     category: "Smart TVs",
     price: 160000,
     stock: 8,
-    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80"
   },
   {
     id: "tv-lg",
-    name: "LG Smart TV 50\"",
+    name: 'LG Smart TV 50"',
     category: "Smart TVs",
     price: 220000,
     stock: 6,
-    image: "https://images.unsplash.com/photo-1601944177325-f8867652837f?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1601944177325-f8867652837f?auto=format&fit=crop&w=900&q=80"
   },
-
-  // Soundbars
-  {
-    id: "soundbar-samsung",
-    name: "Samsung Soundbar",
-    category: "Electronics",
-    price: 85000,
-    stock: 7,
-    image: "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "soundbar-lg",
-    name: "LG Soundbar",
-    category: "Electronics",
-    price: 90000,
-    stock: 6,
-    image: "https://images.unsplash.com/photo-1601944179066-29786cb9d32a?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: "soundbar-sony",
-    name: "Sony Soundbar",
-    category: "Electronics",
-    price: 120000,
-    stock: 5,
-    image: "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?auto=format&fit=crop&w=900&q=80"
-  },
-
-  // Appliances
   {
     id: "washing-machine",
     name: "Washing Machine",
     category: "Home Appliances",
     price: 180000,
     stock: 4,
-    image: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=900&q=80"
   },
   {
     id: "microwave",
@@ -248,25 +71,44 @@ const demoProducts = [
     category: "Home Appliances",
     price: 75000,
     stock: 6,
-    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=80"
   },
   {
-    id: "fridge",
-    name: "Double Door Fridge",
-    category: "Home Appliances",
-    price: 250000,
-    stock: 3,
-    image: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=900&q=80"
+    id: "soundbar-samsung",
+    name: "Samsung Soundbar",
+    category: "Electronics",
+    price: 85000,
+    stock: 7,
+    image:
+      "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=900&q=80"
   },
-
-  // Kitchen
+  {
+    id: "soundbar-lg",
+    name: "LG Soundbar",
+    category: "Electronics",
+    price: 90000,
+    stock: 6,
+    image:
+      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "soundbar-sony",
+    name: "Sony Soundbar",
+    category: "Electronics",
+    price: 120000,
+    stock: 5,
+    image:
+      "https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=900&q=80"
+  },
   {
     id: "gas-cooker",
     name: "Gas Cooker",
     category: "Small Appliances",
     price: 95000,
     stock: 5,
-    image: "https://images.unsplash.com/photo-1586201375754-2c5f44c6f0c7?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80"
   },
   {
     id: "electric-iron",
@@ -274,15 +116,17 @@ const demoProducts = [
     category: "Small Appliances",
     price: 12000,
     stock: 20,
-    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80"
   },
   {
-    id: "boiler",
+    id: "water-boiler",
     name: "Water Boiler",
     category: "Small Appliances",
     price: 10000,
     stock: 25,
-    image: "https://images.unsplash.com/photo-1571552879083-e93b6ea70d1d?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1571552879083-e93b6ea70d1d?auto=format&fit=crop&w=900&q=80"
   },
   {
     id: "blender",
@@ -290,17 +134,26 @@ const demoProducts = [
     category: "Small Appliances",
     price: 18000,
     stock: 18,
-    image: "https://images.unsplash.com/photo-1585237672814-8f85a8118bf5?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1585237672814-8f85a8118bf5?auto=format&fit=crop&w=900&q=80"
   },
-
-  // Home Items
   {
     id: "fan",
     name: "Standing Fan",
     category: "Home & Office",
     price: 25000,
     stock: 12,
-    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1581092160607-ee22731c2c9f?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "fridge",
+    name: "Double Door Fridge",
+    category: "Home Appliances",
+    price: 250000,
+    stock: 3,
+    image:
+      "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=900&q=80"
   },
   {
     id: "distributor",
@@ -308,25 +161,26 @@ const demoProducts = [
     category: "Home & Office",
     price: 8000,
     stock: 30,
-    image: "https://images.unsplash.com/photo-1581093588401-22f5a78cbe64?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1581093588401-22f5a78cbe64?auto=format&fit=crop&w=900&q=80"
   },
-  {
-    id: "stabilizer",
-    name: "Voltage Stabilizer",
-    category: "Electronics",
-    price: 35000,
-    stock: 10,
-    image: "https://images.unsplash.com/photo-1581090700227-1e8e0a5c8f19?auto=format&fit=crop&w=900&q=80"
-  },
-
-  // Furniture
   {
     id: "tv-stand",
     name: "TV Stand",
     category: "Home & Office",
     price: 45000,
     stock: 6,
-    image: "https://images.unsplash.com/photo-1616627982955-0f0c9c2e9c71?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "stabilizer",
+    name: "Regulator / Stabilizer",
+    category: "Electronics",
+    price: 35000,
+    stock: 10,
+    image:
+      "https://images.unsplash.com/photo-1581090700227-1e8e0a5c8f19?auto=format&fit=crop&w=900&q=80"
   },
   {
     id: "office-chair",
@@ -334,7 +188,8 @@ const demoProducts = [
     category: "Home & Office",
     price: 40000,
     stock: 10,
-    image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=900&q=80"
   },
   {
     id: "office-table",
@@ -342,20 +197,23 @@ const demoProducts = [
     category: "Home & Office",
     price: 60000,
     stock: 7,
-    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80"
   },
   {
     id: "dining-set",
-    name: "Dining Table Set",
+    name: "Dining Set",
     category: "Home & Office",
     price: 180000,
     stock: 4,
-    image: "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=80"
+    image:
+      "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=900&q=80"
   }
 ];
+
 const defaultCategories = [
   "ALL",
-   "Smart TVs",
+  "Smart TVs",
   "Phones and Tablets",
   "Apple",
   "Informatique",
@@ -363,13 +221,7 @@ const defaultCategories = [
   "Home Appliances",
   "Small Appliances",
   "Electronics",
-  "Network & Telecom",
-  "Security",
-  "Home & Office",
-  "Tools & Equipment",
-  "Supermarket",
-  "Fashion",
-  "Beauty & Wellness"
+  "Home & Office"
 ];
 
 function Shop() {
@@ -400,7 +252,6 @@ function Shop() {
     try {
       const res = await fetch(`${API_URL}/products`);
       const data = await res.json();
-
       const realProducts = Array.isArray(data) ? data : [];
       setProducts([...realProducts, ...demoProducts]);
     } catch {
@@ -608,7 +459,7 @@ function Shop() {
         <div style={styles.searchBox}>
           <input
             style={styles.searchInput}
-            placeholder="Search phones, electronics, fashion..."
+            placeholder="Search TVs, appliances, furniture..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -658,9 +509,12 @@ function Shop() {
               <span style={styles.badge}>Moving Promotion</span>
               <h2 style={styles.heroTitle}>{currentPromo.title}</h2>
               <p style={styles.heroText}>{currentPromo.text}</p>
+
               <button
                 style={styles.heroButton}
-                onClick={() => window.scrollTo({ top: 620, behavior: "smooth" })}
+                onClick={() =>
+                  window.scrollTo({ top: 620, behavior: "smooth" })
+                }
               >
                 Shop Now
               </button>
@@ -676,6 +530,30 @@ function Shop() {
                   />
                 ))}
               </div>
+            </div>
+          </section>
+
+          <section style={styles.flashDeals}>
+            <div>
+              <h2 style={styles.flashTitle}>🔥 Flash Deals</h2>
+              <p style={styles.flashText}>
+                Limited-time offers. Prices may change soon.
+              </p>
+            </div>
+
+            <div style={styles.flashGrid}>
+              {products.slice(0, 4).map((p) => (
+                <div key={p.id} style={styles.flashCard}>
+                  <img src={p.image} alt={p.name} style={styles.flashImage} />
+                  <b>{p.name}</b>
+                  <p style={styles.oldPrice}>
+                    {getOldPrice(p).toLocaleString()} FCFA
+                  </p>
+                  <p style={styles.flashPrice}>
+                    {Number(p.price).toLocaleString()} FCFA
+                  </p>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -707,20 +585,26 @@ function Shop() {
             {filteredProducts.map((p) => (
               <article key={p.id} style={styles.card}>
                 <div style={styles.imageWrap}>
+                  <span style={styles.discountBadge}>
+                    -{getDiscount(p)}%
+                  </span>
+
                   {p.image ? (
                     <img src={p.image} alt={p.name} style={styles.image} />
                   ) : (
                     <div style={styles.noImage}>No Image</div>
-                  )}
-
-                  {String(p.id).startsWith("demo") && (
-                    <span style={styles.demoBadge}>Estimate</span>
                   )}
                 </div>
 
                 <div style={styles.cardBody}>
                   <p style={styles.category}>{p.category || "General"}</p>
                   <h3 style={styles.productName}>{p.name}</h3>
+
+                  <p style={styles.rating}>★★★★★ ({getRating(p)})</p>
+
+                  <p style={styles.oldPrice}>
+                    {getOldPrice(p).toLocaleString()} FCFA
+                  </p>
 
                   <p style={styles.price}>
                     {Number(p.price).toLocaleString()} FCFA
@@ -774,23 +658,41 @@ function Shop() {
                 <div style={styles.cartItems}>
                   {cart.map((item) => (
                     <div key={item.id} style={styles.cartItem}>
-                      <img src={item.image} alt={item.name} style={styles.cartImage} />
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        style={styles.cartImage}
+                      />
 
                       <div style={{ flex: 1 }}>
                         <h3 style={styles.cartName}>{item.name}</h3>
+
                         <p style={styles.price}>
-                          {(Number(item.price) * item.quantity).toLocaleString()} FCFA
+                          {(Number(item.price) * item.quantity).toLocaleString()}{" "}
+                          FCFA
                         </p>
 
                         <div style={styles.qtyRow}>
-                          <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, -1)}>
+                          <button
+                            style={styles.qtyBtn}
+                            onClick={() => changeQuantity(item.id, -1)}
+                          >
                             −
                           </button>
+
                           <b>{item.quantity}</b>
-                          <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, 1)}>
+
+                          <button
+                            style={styles.qtyBtn}
+                            onClick={() => changeQuantity(item.id, 1)}
+                          >
                             +
                           </button>
-                          <button style={styles.removeBtn} onClick={() => removeFromCart(item.id)}>
+
+                          <button
+                            style={styles.removeBtn}
+                            onClick={() => removeFromCart(item.id)}
+                          >
                             Remove
                           </button>
                         </div>
@@ -825,7 +727,11 @@ function Shop() {
                     <p style={styles.paymentMessage}>{paymentMessage}</p>
                   )}
 
-                  <button style={styles.payButton} onClick={handleCheckout} disabled={loading}>
+                  <button
+                    style={styles.payButton}
+                    onClick={handleCheckout}
+                    disabled={loading}
+                  >
                     {loading ? "Processing payment..." : "Complete Payment"}
                   </button>
                 </div>
@@ -839,63 +745,439 @@ function Shop() {
 }
 
 const styles = {
-  page: { minHeight: "100vh", background: "#f3f4f6", color: "#111827", fontFamily: "Arial, sans-serif" },
-  topBar: { background: "#111827", color: "white", padding: "9px 24px", fontSize: "13px", display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" },
-  header: { background: "white", padding: "18px 24px", display: "grid", gridTemplateColumns: "220px 1fr 130px", gap: "18px", alignItems: "center", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", position: "sticky", top: 0, zIndex: 20 },
-  logo: { margin: 0, fontSize: "30px", fontWeight: "900", color: "#f97316" },
-  logoSub: { margin: "4px 0 0", fontSize: "13px", color: "#6b7280" },
-  searchBox: { display: "flex", border: "2px solid #f97316", borderRadius: "8px", overflow: "hidden" },
-  searchInput: { flex: 1, border: "none", padding: "13px", fontSize: "15px", outline: "none" },
-  searchButton: { border: "none", background: "#f97316", color: "white", padding: "0 20px", fontWeight: "800" },
-  cartButton: { border: "none", background: "#111827", color: "white", padding: "13px", borderRadius: "8px", fontWeight: "800" },
-  menuBar: { background: "#f97316", padding: "0 24px", display: "flex", overflowX: "auto" },
-  menuItem: { border: "none", background: "transparent", color: "white", padding: "13px 16px", fontWeight: "700", whiteSpace: "nowrap" },
-  layout: { maxWidth: "1320px", margin: "22px auto", padding: "0 18px", display: "grid", gridTemplateColumns: "250px 1fr", gap: "20px" },
-  sidebar: { background: "white", borderRadius: "12px", padding: "14px", height: "fit-content", boxShadow: "0 4px 14px rgba(0,0,0,0.06)" },
-  sidebarTitle: { margin: "0 0 12px" },
-  sideCategory: { display: "block", width: "100%", textAlign: "left", padding: "11px 12px", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "700", marginBottom: "4px" },
-  content: { minWidth: 0 },
-  hero: { minHeight: "320px", borderRadius: "16px", padding: "38px", color: "white", display: "flex", alignItems: "center", backgroundSize: "cover", backgroundPosition: "center", transition: "0.5s ease" },
-  badge: { background: "rgba(255,255,255,0.18)", padding: "8px 12px", borderRadius: "999px", fontWeight: "800", fontSize: "13px" },
-  heroTitle: { fontSize: "clamp(32px, 5vw, 56px)", lineHeight: 1, maxWidth: "760px", margin: "18px 0" },
-  heroText: { maxWidth: "640px", fontSize: "17px", color: "#f9fafb", lineHeight: 1.6 },
-  heroButton: { marginTop: "12px", border: "none", background: "white", color: "#111827", padding: "14px 22px", borderRadius: "8px", fontWeight: "900" },
-  dots: { display: "flex", gap: "8px", marginTop: "18px" },
-  dot: { width: "34px", height: "6px", borderRadius: "999px", display: "inline-block" },
-  sectionHeader: { background: "white", borderRadius: "12px", padding: "16px", margin: "18px 0 16px", display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap", boxShadow: "0 4px 14px rgba(0,0,0,0.06)" },
-  sectionTitle: { margin: 0, fontSize: "24px" },
-  muted: { color: "#6b7280", margin: "6px 0" },
-  select: { padding: "12px", borderRadius: "8px", border: "1px solid #d1d5db" },
-  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" },
-  card: { background: "white", borderRadius: "14px", overflow: "hidden", boxShadow: "0 5px 18px rgba(0,0,0,0.07)" },
-  imageWrap: { position: "relative", background: "#e5e7eb" },
-  image: { width: "100%", height: "210px", objectFit: "cover", display: "block" },
-  noImage: { height: "210px", display: "flex", alignItems: "center", justifyContent: "center", color: "#6b7280" },
-  demoBadge: { position: "absolute", top: "10px", right: "10px", background: "#f97316", color: "white", padding: "6px 9px", borderRadius: "999px", fontSize: "12px", fontWeight: "800" },
-  cardBody: { padding: "14px" },
-  category: { margin: 0, color: "#f97316", fontWeight: "900", fontSize: "12px", textTransform: "uppercase" },
-  productName: { margin: "8px 0", fontSize: "17px" },
-  price: { color: "#111827", fontWeight: "900", margin: "6px 0" },
-  stock: { color: "#6b7280", margin: "5px 0", fontSize: "13px" },
-  addButton: { width: "100%", marginTop: "10px", border: "none", background: "#f97316", color: "white", borderRadius: "8px", padding: "12px", fontWeight: "900" },
-  trustSection: { margin: "24px 0", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "12px" },
-  overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "flex-end", zIndex: 1000 },
-  drawer: { width: "100%", maxWidth: "460px", height: "100vh", background: "white", padding: "22px", boxSizing: "border-box", overflowY: "auto" },
-  drawerHeader: { display: "flex", justifyContent: "space-between", borderBottom: "1px solid #e5e7eb", paddingBottom: "14px", marginBottom: "16px" },
-  closeBtn: { border: "none", background: "#111827", color: "white", borderRadius: "8px", padding: "8px 12px" },
-  emptyCart: { textAlign: "center", padding: "50px 0" },
-  cartItems: { display: "grid", gap: "12px" },
-  cartItem: { display: "flex", gap: "12px", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "12px" },
-  cartImage: { width: "80px", height: "80px", objectFit: "cover", borderRadius: "10px" },
-  cartName: { margin: "0 0 6px", fontSize: "16px" },
-  qtyRow: { display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" },
-  qtyBtn: { width: "30px", height: "30px", borderRadius: "8px", border: "1px solid #d1d5db", background: "white", fontWeight: "900" },
-  removeBtn: { padding: "8px 10px", border: "none", borderRadius: "8px", background: "#fee2e2", color: "#991b1b", fontWeight: "800" },
-  checkout: { marginTop: "20px", paddingTop: "16px", borderTop: "1px solid #e5e7eb" },
-  totalBox: { background: "#111827", color: "white", borderRadius: "12px", padding: "16px", marginBottom: "14px", display: "flex", justifyContent: "space-between" },
-  input: { width: "100%", padding: "13px", borderRadius: "10px", border: "1px solid #d1d5db", marginBottom: "12px", boxSizing: "border-box" },
-  paymentMessage: { background: "#ecfdf5", border: "1px solid #bbf7d0", color: "#166534", padding: "12px", borderRadius: "10px", marginBottom: "12px" },
-  payButton: { width: "100%", padding: "14px", border: "none", borderRadius: "10px", background: "#16a34a", color: "white", fontWeight: "900", fontSize: "16px" }
+  page: {
+    minHeight: "100vh",
+    background: "#f3f4f6",
+    color: "#111827",
+    fontFamily: "Arial, sans-serif"
+  },
+  topBar: {
+    background: "#111827",
+    color: "white",
+    padding: "9px 24px",
+    fontSize: "13px",
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "12px",
+    flexWrap: "wrap"
+  },
+  header: {
+    background: "white",
+    padding: "18px 24px",
+    display: "grid",
+    gridTemplateColumns: "220px 1fr 130px",
+    gap: "18px",
+    alignItems: "center",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+    position: "sticky",
+    top: 0,
+    zIndex: 20
+  },
+  logo: {
+    margin: 0,
+    fontSize: "30px",
+    fontWeight: "900",
+    color: "#f97316"
+  },
+  logoSub: {
+    margin: "4px 0 0",
+    fontSize: "13px",
+    color: "#6b7280"
+  },
+  searchBox: {
+    display: "flex",
+    border: "2px solid #f97316",
+    borderRadius: "8px",
+    overflow: "hidden"
+  },
+  searchInput: {
+    flex: 1,
+    border: "none",
+    padding: "13px",
+    fontSize: "15px",
+    outline: "none"
+  },
+  searchButton: {
+    border: "none",
+    background: "#f97316",
+    color: "white",
+    padding: "0 20px",
+    fontWeight: "800"
+  },
+  cartButton: {
+    border: "none",
+    background: "#111827",
+    color: "white",
+    padding: "13px",
+    borderRadius: "8px",
+    fontWeight: "800"
+  },
+  menuBar: {
+    background: "#f97316",
+    padding: "0 24px",
+    display: "flex",
+    overflowX: "auto"
+  },
+  menuItem: {
+    border: "none",
+    background: "transparent",
+    color: "white",
+    padding: "13px 16px",
+    fontWeight: "700",
+    whiteSpace: "nowrap"
+  },
+  layout: {
+    maxWidth: "1320px",
+    margin: "22px auto",
+    padding: "0 18px",
+    display: "grid",
+    gridTemplateColumns: "250px 1fr",
+    gap: "20px"
+  },
+  sidebar: {
+    background: "white",
+    borderRadius: "12px",
+    padding: "14px",
+    height: "fit-content",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.06)"
+  },
+  sidebarTitle: {
+    margin: "0 0 12px"
+  },
+  sideCategory: {
+    display: "block",
+    width: "100%",
+    textAlign: "left",
+    padding: "11px 12px",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: "700",
+    marginBottom: "4px"
+  },
+  content: {
+    minWidth: 0
+  },
+  hero: {
+    minHeight: "320px",
+    borderRadius: "16px",
+    padding: "38px",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    transition: "0.5s ease"
+  },
+  badge: {
+    background: "rgba(255,255,255,0.18)",
+    padding: "8px 12px",
+    borderRadius: "999px",
+    fontWeight: "800",
+    fontSize: "13px"
+  },
+  heroTitle: {
+    fontSize: "clamp(32px, 5vw, 56px)",
+    lineHeight: 1,
+    maxWidth: "760px",
+    margin: "18px 0"
+  },
+  heroText: {
+    maxWidth: "640px",
+    fontSize: "17px",
+    color: "#f9fafb",
+    lineHeight: 1.6
+  },
+  heroButton: {
+    marginTop: "12px",
+    border: "none",
+    background: "white",
+    color: "#111827",
+    padding: "14px 22px",
+    borderRadius: "8px",
+    fontWeight: "900"
+  },
+  dots: {
+    display: "flex",
+    gap: "8px",
+    marginTop: "18px"
+  },
+  dot: {
+    width: "34px",
+    height: "6px",
+    borderRadius: "999px",
+    display: "inline-block"
+  },
+  flashDeals: {
+    background: "white",
+    borderRadius: "14px",
+    padding: "18px",
+    margin: "18px 0",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.06)"
+  },
+  flashTitle: {
+    margin: 0,
+    fontSize: "24px"
+  },
+  flashText: {
+    color: "#6b7280",
+    margin: "6px 0 16px"
+  },
+  flashGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+    gap: "14px"
+  },
+  flashCard: {
+    border: "1px solid #e5e7eb",
+    borderRadius: "12px",
+    padding: "10px",
+    background: "#fff7ed"
+  },
+  flashImage: {
+    width: "100%",
+    height: "120px",
+    objectFit: "cover",
+    borderRadius: "10px",
+    marginBottom: "8px"
+  },
+  sectionHeader: {
+    background: "white",
+    borderRadius: "12px",
+    padding: "16px",
+    margin: "18px 0 16px",
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "12px",
+    flexWrap: "wrap",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.06)"
+  },
+  sectionTitle: {
+    margin: 0,
+    fontSize: "24px"
+  },
+  muted: {
+    color: "#6b7280",
+    margin: "6px 0"
+  },
+  select: {
+    padding: "12px",
+    borderRadius: "8px",
+    border: "1px solid #d1d5db"
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "16px"
+  },
+  card: {
+    background: "white",
+    borderRadius: "14px",
+    overflow: "hidden",
+    boxShadow: "0 5px 18px rgba(0,0,0,0.07)"
+  },
+  imageWrap: {
+    position: "relative",
+    background: "#e5e7eb"
+  },
+  image: {
+    width: "100%",
+    height: "210px",
+    objectFit: "cover",
+    display: "block"
+  },
+  noImage: {
+    height: "210px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#6b7280"
+  },
+  discountBadge: {
+    position: "absolute",
+    top: "10px",
+    left: "10px",
+    background: "#ef4444",
+    color: "white",
+    padding: "6px 10px",
+    borderRadius: "999px",
+    fontSize: "12px",
+    fontWeight: "900",
+    zIndex: 2
+  },
+  cardBody: {
+    padding: "14px"
+  },
+  category: {
+    margin: 0,
+    color: "#f97316",
+    fontWeight: "900",
+    fontSize: "12px",
+    textTransform: "uppercase"
+  },
+  productName: {
+    margin: "8px 0",
+    fontSize: "17px"
+  },
+  rating: {
+    color: "#f59e0b",
+    fontSize: "14px",
+    margin: "4px 0"
+  },
+  oldPrice: {
+    textDecoration: "line-through",
+    color: "#9ca3af",
+    margin: "6px 0 0"
+  },
+  price: {
+    color: "#111827",
+    fontWeight: "900",
+    margin: "6px 0"
+  },
+  flashPrice: {
+    color: "#f97316",
+    fontWeight: "900",
+    margin: "4px 0"
+  },
+  stock: {
+    color: "#6b7280",
+    margin: "5px 0",
+    fontSize: "13px"
+  },
+  addButton: {
+    width: "100%",
+    marginTop: "10px",
+    border: "none",
+    background: "#f97316",
+    color: "white",
+    borderRadius: "8px",
+    padding: "12px",
+    fontWeight: "900"
+  },
+  trustSection: {
+    margin: "24px 0",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+    gap: "12px"
+  },
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.5)",
+    display: "flex",
+    justifyContent: "flex-end",
+    zIndex: 1000
+  },
+  drawer: {
+    width: "100%",
+    maxWidth: "460px",
+    height: "100vh",
+    background: "white",
+    padding: "22px",
+    boxSizing: "border-box",
+    overflowY: "auto"
+  },
+  drawerHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    borderBottom: "1px solid #e5e7eb",
+    paddingBottom: "14px",
+    marginBottom: "16px"
+  },
+  closeBtn: {
+    border: "none",
+    background: "#111827",
+    color: "white",
+    borderRadius: "8px",
+    padding: "8px 12px"
+  },
+  emptyCart: {
+    textAlign: "center",
+    padding: "50px 0"
+  },
+  cartItems: {
+    display: "grid",
+    gap: "12px"
+  },
+  cartItem: {
+    display: "flex",
+    gap: "12px",
+    border: "1px solid #e5e7eb",
+    borderRadius: "12px",
+    padding: "12px"
+  },
+  cartImage: {
+    width: "80px",
+    height: "80px",
+    objectFit: "cover",
+    borderRadius: "10px"
+  },
+  cartName: {
+    margin: "0 0 6px",
+    fontSize: "16px"
+  },
+  qtyRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    flexWrap: "wrap"
+  },
+  qtyBtn: {
+    width: "30px",
+    height: "30px",
+    borderRadius: "8px",
+    border: "1px solid #d1d5db",
+    background: "white",
+    fontWeight: "900"
+  },
+  removeBtn: {
+    padding: "8px 10px",
+    border: "none",
+    borderRadius: "8px",
+    background: "#fee2e2",
+    color: "#991b1b",
+    fontWeight: "800"
+  },
+  checkout: {
+    marginTop: "20px",
+    paddingTop: "16px",
+    borderTop: "1px solid #e5e7eb"
+  },
+  totalBox: {
+    background: "#111827",
+    color: "white",
+    borderRadius: "12px",
+    padding: "16px",
+    marginBottom: "14px",
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  input: {
+    width: "100%",
+    padding: "13px",
+    borderRadius: "10px",
+    border: "1px solid #d1d5db",
+    marginBottom: "12px",
+    boxSizing: "border-box"
+  },
+  paymentMessage: {
+    background: "#ecfdf5",
+    border: "1px solid #bbf7d0",
+    color: "#166534",
+    padding: "12px",
+    borderRadius: "10px",
+    marginBottom: "12px"
+  },
+  payButton: {
+    width: "100%",
+    padding: "14px",
+    border: "none",
+    borderRadius: "10px",
+    background: "#16a34a",
+    color: "white",
+    fontWeight: "900",
+    fontSize: "16px"
+  }
 };
 
 export default Shop;

@@ -8,6 +8,7 @@ function Shop() {
   const [cartOpen, setCartOpen] = useState(false);
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadProducts();
@@ -75,7 +76,9 @@ function Shop() {
     0
   );
 
-  async function placeOrder() {
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  async function handleCheckout() {
     if (cart.length === 0) {
       alert("Cart is empty");
       return;
@@ -86,37 +89,65 @@ function Shop() {
       return;
     }
 
-    const res = await fetch(`${API_URL}/orders`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        phone,
-        address,
-        items: cart.map((item) => ({
-          productId: item.id,
-          quantity: item.quantity,
-          price: Number(item.price)
-        }))
-      })
-    });
+    try {
+      setLoading(true);
 
-    if (!res.ok) {
-      alert("Failed to place order");
-      return;
+      const orderRes = await fetch(`${API_URL}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          phone,
+          address,
+          items: cart.map((item) => ({
+            productId: item.id,
+            quantity: item.quantity,
+            price: Number(item.price)
+          }))
+        })
+      });
+
+      if (!orderRes.ok) {
+        const error = await orderRes.json();
+        alert(error.error || "Failed to create order");
+        return;
+      }
+
+      const orderData = await orderRes.json();
+
+      const paymentRes = await fetch(`${API_URL}/payment/mtn`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          amount: total,
+          phone,
+          orderId: orderData.id
+        })
+      });
+
+      if (!paymentRes.ok) {
+        const error = await paymentRes.json();
+        alert(error.error || "Payment request failed");
+        return;
+      }
+
+      alert("📱 Payment request sent. Check your phone to confirm.");
+
+      setCart([]);
+      setPhone("");
+      setAddress("");
+      setCartOpen(false);
+      loadProducts();
+    } catch (error) {
+      console.log(error);
+      alert("Checkout failed");
+    } finally {
+      setLoading(false);
     }
-
-    alert("Order placed successfully");
-
-    setCart([]);
-    setPhone("");
-    setAddress("");
-    setCartOpen(false);
-    loadProducts();
   }
-
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div style={styles.page}>
@@ -206,10 +237,7 @@ function Shop() {
                             +
                           </button>
 
-                          <button
-                            style={styles.removeBtn}
-                            onClick={() => removeFromCart(item.id)}
-                          >
+                          <button style={styles.removeBtn} onClick={() => removeFromCart(item.id)}>
                             Remove
                           </button>
                         </div>
@@ -223,7 +251,7 @@ function Shop() {
 
                   <input
                     style={styles.input}
-                    placeholder="Phone number"
+                    placeholder="MTN phone number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
@@ -235,8 +263,15 @@ function Shop() {
                     onChange={(e) => setAddress(e.target.value)}
                   />
 
-                  <button style={styles.primaryBtnFull} onClick={placeOrder}>
-                    Place Order
+                  <button
+                    style={{
+                      ...styles.primaryBtnFull,
+                      opacity: loading ? 0.6 : 1
+                    }}
+                    onClick={handleCheckout}
+                    disabled={loading}
+                  >
+                    {loading ? "Processing..." : "Pay with MTN MoMo"}
                   </button>
                 </div>
               </>

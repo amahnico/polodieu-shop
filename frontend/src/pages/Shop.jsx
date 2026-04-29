@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 const API_URL = "https://polodieu-shop.onrender.com";
+const WHATSAPP_NUMBER = "237651325289";
 
 function Shop() {
   const [products, setProducts] = useState([]);
@@ -9,6 +10,7 @@ function Shop() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState("");
 
   useEffect(() => {
     loadProducts();
@@ -78,6 +80,63 @@ function Shop() {
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  function openWhatsAppOrder(orderId) {
+    const itemsText = cart
+      .map(
+        (item) =>
+          `${item.name} x${item.quantity} = ${(
+            Number(item.price) * item.quantity
+          ).toLocaleString()} FCFA`
+      )
+      .join("\n");
+
+    const message =
+      `New Order\n\n` +
+      `Order ID: ${orderId}\n` +
+      `Phone: ${phone}\n` +
+      `Address: ${address}\n\n` +
+      `Items:\n${itemsText}\n\n` +
+      `Total: ${total.toLocaleString()} FCFA`;
+
+    window.open(
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+  }
+
+  async function checkPaymentStatus(referenceId, orderId) {
+    setPaymentMessage("Checking payment status...");
+
+    for (let i = 0; i < 8; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      const res = await fetch(
+        `${API_URL}/payment/mtn/${referenceId}/status?orderId=${orderId}`
+      );
+
+      const data = await res.json();
+
+      if (data.status === "SUCCESSFUL") {
+        setPaymentMessage("✅ Payment confirmed. Order paid.");
+        setCart([]);
+        setPhone("");
+        setAddress("");
+        setCartOpen(false);
+        loadProducts();
+        return;
+      }
+
+      if (data.status === "FAILED") {
+        setPaymentMessage("❌ Payment failed.");
+        return;
+      }
+
+      setPaymentMessage("Waiting for payment confirmation...");
+    }
+
+    setPaymentMessage("Payment request sent. Check admin later.");
+  }
+
   async function handleCheckout() {
     if (cart.length === 0) {
       alert("Cart is empty");
@@ -91,6 +150,7 @@ function Shop() {
 
     try {
       setLoading(true);
+      setPaymentMessage("");
 
       const orderRes = await fetch(`${API_URL}/orders`, {
         method: "POST",
@@ -134,13 +194,12 @@ function Shop() {
         return;
       }
 
-      alert("📱 Payment request sent. Check your phone to confirm.");
+      const paymentData = await paymentRes.json();
 
-      setCart([]);
-      setPhone("");
-      setAddress("");
-      setCartOpen(false);
-      loadProducts();
+      setPaymentMessage("📱 Payment request sent. Check your phone.");
+      openWhatsAppOrder(orderData.id);
+
+      await checkPaymentStatus(paymentData.referenceId, orderData.id);
     } catch (error) {
       console.log(error);
       alert("Checkout failed");
@@ -254,6 +313,7 @@ function Shop() {
                     placeholder="MTN phone number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    disabled={loading}
                   />
 
                   <input
@@ -261,7 +321,12 @@ function Shop() {
                     placeholder="Delivery address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
+                    disabled={loading}
                   />
+
+                  {paymentMessage && (
+                    <p style={styles.paymentMessage}>{paymentMessage}</p>
+                  )}
 
                   <button
                     style={{
@@ -271,7 +336,7 @@ function Shop() {
                     onClick={handleCheckout}
                     disabled={loading}
                   >
-                    {loading ? "Processing..." : "Pay with MTN MoMo"}
+                    {loading ? "Processing payment..." : "Pay with MTN MoMo"}
                   </button>
                 </div>
               </>
@@ -470,6 +535,14 @@ const styles = {
     marginBottom: "12px",
     fontSize: "15px",
     boxSizing: "border-box"
+  },
+  paymentMessage: {
+    background: "#ecfdf5",
+    border: "1px solid #bbf7d0",
+    color: "#166534",
+    padding: "12px",
+    borderRadius: "10px",
+    marginBottom: "12px"
   }
 };
 

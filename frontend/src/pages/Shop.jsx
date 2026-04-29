@@ -189,10 +189,7 @@ const demoProducts = [
     price: 18000,
     stock: 15,
     image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80"
-  }
-];const demoProducts = [
-
-  // TVs
+ },
   {
     id: "tv-samsung",
     name: "Samsung Smart TV 43\"",

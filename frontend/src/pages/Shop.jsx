@@ -190,8 +190,172 @@ const demoProducts = [
     stock: 15,
     image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80"
   }
-];
+];const demoProducts = [
 
+  // TVs
+  {
+    id: "tv-samsung",
+    name: "Samsung Smart TV 43\"",
+    category: "Electronics",
+    price: 160000,
+    stock: 8,
+    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "tv-lg",
+    name: "LG Smart TV 50\"",
+    category: "Electronics",
+    price: 220000,
+    stock: 6,
+    image: "https://images.unsplash.com/photo-1601944177325-f8867652837f?auto=format&fit=crop&w=900&q=80"
+  },
+
+  // Soundbars
+  {
+    id: "soundbar-samsung",
+    name: "Samsung Soundbar",
+    category: "Electronics",
+    price: 85000,
+    stock: 7,
+    image: "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "soundbar-lg",
+    name: "LG Soundbar",
+    category: "Electronics",
+    price: 90000,
+    stock: 6,
+    image: "https://images.unsplash.com/photo-1601944179066-29786cb9d32a?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "soundbar-sony",
+    name: "Sony Soundbar",
+    category: "Electronics",
+    price: 120000,
+    stock: 5,
+    image: "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?auto=format&fit=crop&w=900&q=80"
+  },
+
+  // Appliances
+  {
+    id: "washing-machine",
+    name: "Washing Machine",
+    category: "Home Appliances",
+    price: 180000,
+    stock: 4,
+    image: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "microwave",
+    name: "Microwave Oven",
+    category: "Home Appliances",
+    price: 75000,
+    stock: 6,
+    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "fridge",
+    name: "Double Door Fridge",
+    category: "Home Appliances",
+    price: 250000,
+    stock: 3,
+    image: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=900&q=80"
+  },
+
+  // Kitchen
+  {
+    id: "gas-cooker",
+    name: "Gas Cooker",
+    category: "Small Appliances",
+    price: 95000,
+    stock: 5,
+    image: "https://images.unsplash.com/photo-1586201375754-2c5f44c6f0c7?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "electric-iron",
+    name: "Electric Iron",
+    category: "Small Appliances",
+    price: 12000,
+    stock: 20,
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "boiler",
+    name: "Water Boiler",
+    category: "Small Appliances",
+    price: 10000,
+    stock: 25,
+    image: "https://images.unsplash.com/photo-1571552879083-e93b6ea70d1d?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "blender",
+    name: "Electric Blender",
+    category: "Small Appliances",
+    price: 18000,
+    stock: 18,
+    image: "https://images.unsplash.com/photo-1585237672814-8f85a8118bf5?auto=format&fit=crop&w=900&q=80"
+  },
+
+  // Home Items
+  {
+    id: "fan",
+    name: "Standing Fan",
+    category: "Home & Office",
+    price: 25000,
+    stock: 12,
+    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "distributor",
+    name: "Power Extension Distributor",
+    category: "Home & Office",
+    price: 8000,
+    stock: 30,
+    image: "https://images.unsplash.com/photo-1581093588401-22f5a78cbe64?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "stabilizer",
+    name: "Voltage Stabilizer",
+    category: "Electronics",
+    price: 35000,
+    stock: 10,
+    image: "https://images.unsplash.com/photo-1581090700227-1e8e0a5c8f19?auto=format&fit=crop&w=900&q=80"
+  },
+
+  // Furniture
+  {
+    id: "tv-stand",
+    name: "TV Stand",
+    category: "Home & Office",
+    price: 45000,
+    stock: 6,
+    image: "https://images.unsplash.com/photo-1616627982955-0f0c9c2e9c71?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "office-chair",
+    name: "Office Chair",
+    category: "Home & Office",
+    price: 40000,
+    stock: 10,
+    image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "office-table",
+    name: "Office Table",
+    category: "Home & Office",
+    price: 60000,
+    stock: 7,
+    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "dining-set",
+    name: "Dining Table Set",
+    category: "Home & Office",
+    price: 180000,
+    stock: 4,
+    image: "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=80"
+  }
+];
 const defaultCategories = [
   "ALL",
   "Phones and Tablets",

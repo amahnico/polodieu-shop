@@ -2,12 +2,21 @@ import { useEffect, useState } from "react";
 
 const API_URL = "https://polodieu-shop.onrender.com";
 
+const emptyProduct = {
+  name: "",
+  price: "",
+  category: "",
+  image: "",
+  stock: ""
+};
+
 function Admin() {
   const [authorized, setAuthorized] = useState(false);
   const [password, setPassword] = useState("");
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [editing, setEditing] = useState(null);
+  const [newProduct, setNewProduct] = useState(emptyProduct);
 
   function authHeaders() {
     return {
@@ -65,6 +74,33 @@ function Admin() {
 
     const data = await res.json();
     setOrders(data);
+  }
+
+  async function addProduct() {
+    if (!newProduct.name || !newProduct.price || !newProduct.stock) {
+      alert("Name, price, and stock are required");
+      return;
+    }
+
+    const res = await fetch(`${API_URL}/products`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({
+        name: newProduct.name,
+        price: Number(newProduct.price),
+        category: newProduct.category,
+        image: newProduct.image,
+        stock: Number(newProduct.stock)
+      })
+    });
+
+    if (!res.ok) {
+      alert("Failed to add product");
+      return;
+    }
+
+    setNewProduct(emptyProduct);
+    loadProducts();
   }
 
   function startEdit(product) {
@@ -127,7 +163,7 @@ function Admin() {
       <div style={styles.loginPage}>
         <div style={styles.loginCard}>
           <h1 style={styles.title}>Admin Login</h1>
-          <p style={styles.muted}>Enter your admin password to continue.</p>
+          <p style={styles.muted}>Enter your admin password.</p>
 
           <input
             style={styles.input}
@@ -153,7 +189,7 @@ function Admin() {
       <div style={styles.header}>
         <div>
           <h1 style={styles.title}>Admin Panel</h1>
-          <p style={styles.muted}>Manage products and orders.</p>
+          <p style={styles.muted}>Manage your shop.</p>
         </div>
 
         <button
@@ -168,20 +204,38 @@ function Admin() {
       </div>
 
       <div style={styles.statsGrid}>
-        <div style={styles.statCard}>
-          <h2>{products.length}</h2>
-          <p>Products</p>
+        <div style={styles.statCard}><h2>{products.length}</h2><p>Products</p></div>
+        <div style={styles.statCard}><h2>{orders.length}</h2><p>Orders</p></div>
+        <div style={styles.statCard}><h2>{revenue.toLocaleString()} FCFA</h2><p>Revenue</p></div>
+      </div>
+
+      <div style={styles.editCard}>
+        <h2>Add Product</h2>
+
+        <div style={styles.formGrid}>
+          <input style={styles.input} placeholder="Name" value={newProduct.name}
+            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} />
+
+          <input style={styles.input} type="number" placeholder="Price" value={newProduct.price}
+            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} />
+
+          <input style={styles.input} placeholder="Category" value={newProduct.category}
+            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })} />
+
+          <input style={styles.input} type="number" placeholder="Stock" value={newProduct.stock}
+            onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })} />
+
+          <input style={{ ...styles.input, gridColumn: "1 / -1" }} placeholder="Image URL" value={newProduct.image}
+            onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })} />
         </div>
 
-        <div style={styles.statCard}>
-          <h2>{orders.length}</h2>
-          <p>Orders</p>
-        </div>
+        {newProduct.image && (
+          <img src={newProduct.image} alt="Preview" style={styles.previewImage} />
+        )}
 
-        <div style={styles.statCard}>
-          <h2>{revenue.toLocaleString()} FCFA</h2>
-          <p>Revenue</p>
-        </div>
+        <button style={styles.primaryBtn} onClick={addProduct}>
+          Add Product
+        </button>
       </div>
 
       {editing && (
@@ -189,42 +243,20 @@ function Admin() {
           <h2>Edit Product</h2>
 
           <div style={styles.formGrid}>
-            <input
-              style={styles.input}
-              placeholder="Name"
-              value={editing.name || ""}
-              onChange={(e) => setEditing({ ...editing, name: e.target.value })}
-            />
+            <input style={styles.input} placeholder="Name" value={editing.name || ""}
+              onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
 
-            <input
-              style={styles.input}
-              type="number"
-              placeholder="Price"
-              value={editing.price || ""}
-              onChange={(e) => setEditing({ ...editing, price: e.target.value })}
-            />
+            <input style={styles.input} type="number" placeholder="Price" value={editing.price || ""}
+              onChange={(e) => setEditing({ ...editing, price: e.target.value })} />
 
-            <input
-              style={styles.input}
-              placeholder="Category"
-              value={editing.category || ""}
-              onChange={(e) => setEditing({ ...editing, category: e.target.value })}
-            />
+            <input style={styles.input} placeholder="Category" value={editing.category || ""}
+              onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
 
-            <input
-              style={styles.input}
-              type="number"
-              placeholder="Stock"
-              value={editing.stock || ""}
-              onChange={(e) => setEditing({ ...editing, stock: e.target.value })}
-            />
+            <input style={styles.input} type="number" placeholder="Stock" value={editing.stock || ""}
+              onChange={(e) => setEditing({ ...editing, stock: e.target.value })} />
 
-            <input
-              style={{ ...styles.input, gridColumn: "1 / -1" }}
-              placeholder="Image URL"
-              value={editing.image || ""}
-              onChange={(e) => setEditing({ ...editing, image: e.target.value })}
-            />
+            <input style={{ ...styles.input, gridColumn: "1 / -1" }} placeholder="Image URL" value={editing.image || ""}
+              onChange={(e) => setEditing({ ...editing, image: e.target.value })} />
           </div>
 
           {editing.image && (
@@ -232,13 +264,8 @@ function Admin() {
           )}
 
           <div style={styles.actions}>
-            <button style={styles.primaryBtn} onClick={saveEdit}>
-              Save Changes
-            </button>
-
-            <button style={styles.grayBtn} onClick={() => setEditing(null)}>
-              Cancel
-            </button>
+            <button style={styles.primaryBtn} onClick={saveEdit}>Save Changes</button>
+            <button style={styles.grayBtn} onClick={() => setEditing(null)}>Cancel</button>
           </div>
         </div>
       )}
@@ -260,13 +287,8 @@ function Admin() {
             <p style={styles.muted}>Stock: {p.stock}</p>
 
             <div style={styles.actions}>
-              <button style={styles.editBtn} onClick={() => startEdit(p)}>
-                Edit
-              </button>
-
-              <button style={styles.deleteBtn} onClick={() => deleteProduct(p.id)}>
-                Delete
-              </button>
+              <button style={styles.editBtn} onClick={() => startEdit(p)}>Edit</button>
+              <button style={styles.deleteBtn} onClick={() => deleteProduct(p.id)}>Delete</button>
             </div>
           </div>
         ))}
@@ -302,184 +324,33 @@ function Admin() {
 }
 
 const styles = {
-  page: {
-    minHeight: "100vh",
-    padding: "24px",
-    fontFamily: "Arial, sans-serif",
-    background: "#f4f6f8",
-    color: "#111827"
-  },
-  loginPage: {
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontFamily: "Arial, sans-serif",
-    background: "#f4f6f8"
-  },
-  loginCard: {
-    width: "100%",
-    maxWidth: "360px",
-    background: "white",
-    padding: "28px",
-    borderRadius: "16px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)"
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "16px",
-    alignItems: "center",
-    marginBottom: "24px"
-  },
-  title: {
-    margin: 0,
-    fontSize: "30px"
-  },
-  muted: {
-    color: "#6b7280",
-    margin: "6px 0"
-  },
-  statsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: "16px",
-    marginBottom: "24px"
-  },
-  statCard: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "16px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)"
-  },
-  editCard: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "16px",
-    marginBottom: "24px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
-    border: "2px solid #22c55e"
-  },
-  formGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "12px"
-  },
-  input: {
-    padding: "12px",
-    borderRadius: "10px",
-    border: "1px solid #d1d5db",
-    outline: "none",
-    fontSize: "15px",
-    width: "100%",
-    boxSizing: "border-box"
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-    gap: "16px"
-  },
-  card: {
-    background: "white",
-    padding: "16px",
-    borderRadius: "16px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)"
-  },
-  productImage: {
-    width: "100%",
-    height: "160px",
-    objectFit: "cover",
-    borderRadius: "12px",
-    background: "#e5e7eb"
-  },
-  noImage: {
-    height: "160px",
-    borderRadius: "12px",
-    background: "#e5e7eb",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#6b7280"
-  },
-  previewImage: {
-    width: "160px",
-    borderRadius: "12px",
-    marginTop: "14px"
-  },
-  price: {
-    color: "#16a34a",
-    fontWeight: "bold"
-  },
-  actions: {
-    display: "flex",
-    gap: "10px",
-    flexWrap: "wrap",
-    marginTop: "12px"
-  },
-  primaryBtn: {
-    padding: "11px 16px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#16a34a",
-    color: "white",
-    cursor: "pointer",
-    fontWeight: "bold"
-  },
-  editBtn: {
-    padding: "10px 14px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#2563eb",
-    color: "white",
-    cursor: "pointer"
-  },
-  deleteBtn: {
-    padding: "10px 14px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#dc2626",
-    color: "white",
-    cursor: "pointer"
-  },
-  grayBtn: {
-    padding: "11px 16px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#6b7280",
-    color: "white",
-    cursor: "pointer"
-  },
-  logoutBtn: {
-    padding: "10px 14px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#111827",
-    color: "white",
-    cursor: "pointer"
-  },
-  sectionTitle: {
-    marginTop: "28px"
-  },
-  orderList: {
-    display: "grid",
-    gap: "14px"
-  },
-  orderCard: {
-    background: "white",
-    padding: "16px",
-    borderRadius: "16px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "14px",
-    alignItems: "center",
-    flexWrap: "wrap"
-  },
-  select: {
-    padding: "10px",
-    borderRadius: "10px",
-    border: "1px solid #d1d5db"
-  }
+  page: { minHeight: "100vh", padding: "24px", fontFamily: "Arial", background: "#f4f6f8", color: "#111827" },
+  loginPage: { minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Arial", background: "#f4f6f8" },
+  loginCard: { width: "100%", maxWidth: "360px", background: "white", padding: "28px", borderRadius: "16px", boxShadow: "0 10px 30px rgba(0,0,0,0.08)" },
+  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" },
+  title: { margin: 0, fontSize: "30px" },
+  muted: { color: "#6b7280", margin: "6px 0" },
+  statsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "16px", marginBottom: "24px" },
+  statCard: { background: "white", padding: "20px", borderRadius: "16px", boxShadow: "0 6px 20px rgba(0,0,0,0.06)" },
+  editCard: { background: "white", padding: "20px", borderRadius: "16px", marginBottom: "24px", boxShadow: "0 6px 20px rgba(0,0,0,0.06)" },
+  formGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "12px", marginBottom: "14px" },
+  input: { padding: "12px", borderRadius: "10px", border: "1px solid #d1d5db", fontSize: "15px", width: "100%", boxSizing: "border-box" },
+  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: "16px" },
+  card: { background: "white", padding: "16px", borderRadius: "16px", boxShadow: "0 6px 20px rgba(0,0,0,0.06)" },
+  productImage: { width: "100%", height: "160px", objectFit: "cover", borderRadius: "12px", background: "#e5e7eb" },
+  noImage: { height: "160px", borderRadius: "12px", background: "#e5e7eb", display: "flex", alignItems: "center", justifyContent: "center", color: "#6b7280" },
+  previewImage: { width: "160px", borderRadius: "12px", marginBottom: "14px", display: "block" },
+  price: { color: "#16a34a", fontWeight: "bold" },
+  actions: { display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "12px" },
+  primaryBtn: { padding: "11px 16px", border: "none", borderRadius: "10px", background: "#16a34a", color: "white", cursor: "pointer", fontWeight: "bold" },
+  editBtn: { padding: "10px 14px", border: "none", borderRadius: "10px", background: "#2563eb", color: "white", cursor: "pointer" },
+  deleteBtn: { padding: "10px 14px", border: "none", borderRadius: "10px", background: "#dc2626", color: "white", cursor: "pointer" },
+  grayBtn: { padding: "11px 16px", border: "none", borderRadius: "10px", background: "#6b7280", color: "white", cursor: "pointer" },
+  logoutBtn: { padding: "10px 14px", border: "none", borderRadius: "10px", background: "#111827", color: "white", cursor: "pointer" },
+  sectionTitle: { marginTop: "28px" },
+  orderList: { display: "grid", gap: "14px" },
+  orderCard: { background: "white", padding: "16px", borderRadius: "16px", boxShadow: "0 6px 20px rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between", gap: "14px", alignItems: "center", flexWrap: "wrap" },
+  select: { padding: "10px", borderRadius: "10px", border: "1px solid #d1d5db" }
 };
 
 export default Admin;

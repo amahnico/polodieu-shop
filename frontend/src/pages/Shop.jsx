@@ -3,6 +3,195 @@ import { useEffect, useState } from "react";
 const API_URL = "https://polodieu-shop.onrender.com";
 const WHATSAPP_NUMBER = "237651325289";
 
+const promoSlides = [
+  {
+    title: "Big Tech Deals",
+    text: "Phones, laptops, accessories and electronics at great prices.",
+    image: "https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?auto=format&fit=crop&w=1600&q=80"
+  },
+  {
+    title: "Home Essentials",
+    text: "Upgrade your home with appliances, office items and tools.",
+    image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1600&q=80"
+  },
+  {
+    title: "Fashion & Beauty",
+    text: "Shop stylish fashion, beauty and wellness products.",
+    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&q=80"
+  }
+];
+
+const demoProducts = [
+  {
+    id: "demo-phone-1",
+    name: "Tecno Spark Smartphone",
+    category: "Phones and Tablets",
+    price: 105000,
+    stock: 15,
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-phone-2",
+    name: "Android Tablet 10 Inch",
+    category: "Phones and Tablets",
+    price: 85000,
+    stock: 10,
+    image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-apple-1",
+    name: "iPhone 13",
+    category: "Apple",
+    price: 350000,
+    stock: 7,
+    image: "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-apple-2",
+    name: "MacBook Air",
+    category: "Apple",
+    price: 650000,
+    stock: 5,
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-computer-1",
+    name: "HP Laptop Core i5",
+    category: "Informatique",
+    price: 280000,
+    stock: 8,
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-computer-2",
+    name: "Wireless Keyboard & Mouse",
+    category: "Informatique",
+    price: 18000,
+    stock: 20,
+    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-gaming-1",
+    name: "Gaming Controller",
+    category: "Gaming",
+    price: 25000,
+    stock: 12,
+    image: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-gaming-2",
+    name: "Gaming Headset",
+    category: "Gaming",
+    price: 30000,
+    stock: 10,
+    image: "https://images.unsplash.com/photo-1599669454699-248893623440?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-appliance-1",
+    name: "Double Door Refrigerator",
+    category: "Home Appliances",
+    price: 220000,
+    stock: 4,
+    image: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-appliance-2",
+    name: "Washing Machine",
+    category: "Home Appliances",
+    price: 180000,
+    stock: 3,
+    image: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-small-1",
+    name: "Electric Blender",
+    category: "Small Appliances",
+    price: 25000,
+    stock: 18,
+    image: "https://images.unsplash.com/photo-1585237672814-8f85a8118bf5?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-small-2",
+    name: "Electric Kettle",
+    category: "Small Appliances",
+    price: 12000,
+    stock: 25,
+    image: "https://images.unsplash.com/photo-1571552879083-e93b6ea70d1d?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-electronics-1",
+    name: "32 Inch Smart TV",
+    category: "Electronics",
+    price: 85000,
+    stock: 9,
+    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-electronics-2",
+    name: "Bluetooth Speaker",
+    category: "Electronics",
+    price: 18000,
+    stock: 16,
+    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-network-1",
+    name: "WiFi Router",
+    category: "Network & Telecom",
+    price: 28000,
+    stock: 14,
+    image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-security-1",
+    name: "CCTV Security Camera",
+    category: "Security",
+    price: 35000,
+    stock: 8,
+    image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-office-1",
+    name: "Office Chair",
+    category: "Home & Office",
+    price: 45000,
+    stock: 11,
+    image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-tools-1",
+    name: "Tool Box Set",
+    category: "Tools & Equipment",
+    price: 30000,
+    stock: 10,
+    image: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-market-1",
+    name: "Grocery Pack",
+    category: "Supermarket",
+    price: 15000,
+    stock: 30,
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-fashion-1",
+    name: "Classic Sneakers",
+    category: "Fashion",
+    price: 25000,
+    stock: 13,
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "demo-beauty-1",
+    name: "Beauty Care Set",
+    category: "Beauty & Wellness",
+    price: 18000,
+    stock: 15,
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80"
+  }
+];
+
 const defaultCategories = [
   "ALL",
   "Phones and Tablets",
@@ -21,39 +210,9 @@ const defaultCategories = [
   "Beauty & Wellness"
 ];
 
-const categoryImages = {
-  "Phones and Tablets":
-    "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80",
-  Apple:
-    "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80",
-  Informatique:
-    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80",
-  Gaming:
-    "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80",
-  "Home Appliances":
-    "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80",
-  "Small Appliances":
-    "https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=900&q=80",
-  Electronics:
-    "https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=900&q=80",
-  "Network & Telecom":
-    "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=900&q=80",
-  Security:
-    "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=900&q=80",
-  "Home & Office":
-    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
-  "Tools & Equipment":
-    "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=900&q=80",
-  Supermarket:
-    "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80",
-  Fashion:
-    "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=900&q=80",
-  "Beauty & Wellness":
-    "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80"
-};
-
 function Shop() {
   const [products, setProducts] = useState([]);
+  const [slide, setSlide] = useState(0);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [phone, setPhone] = useState("");
@@ -67,14 +226,32 @@ function Shop() {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSlide((current) => (current + 1) % promoSlides.length);
+    }, 3500);
+
+    return () => clearInterval(timer);
+  }, []);
+
   async function loadProducts() {
-    const res = await fetch(`${API_URL}/products`);
-    const data = await res.json();
-    setProducts(data);
+    try {
+      const res = await fetch(`${API_URL}/products`);
+      const data = await res.json();
+
+      const realProducts = Array.isArray(data) ? data : [];
+      setProducts([...realProducts, ...demoProducts]);
+    } catch {
+      setProducts(demoProducts);
+    }
   }
 
-  const dbCategories = products.map((p) => p.category).filter(Boolean);
-  const categories = [...new Set([...defaultCategories, ...dbCategories])];
+  const categories = [
+    ...new Set([
+      ...defaultCategories,
+      ...products.map((p) => p.category).filter(Boolean)
+    ])
+  ];
 
   const filteredProducts = products.filter((p) => {
     const matchesSearch = p.name?.toLowerCase().includes(search.toLowerCase());
@@ -215,8 +392,7 @@ function Shop() {
       });
 
       if (!orderRes.ok) {
-        const error = await orderRes.json();
-        alert(error.error || "Failed to create order");
+        alert("Only real admin products can be ordered. Demo products are for display.");
         return;
       }
 
@@ -252,6 +428,8 @@ function Shop() {
     }
   }
 
+  const currentPromo = promoSlides[slide];
+
   return (
     <div style={styles.page}>
       <div style={styles.topBar}>
@@ -260,7 +438,7 @@ function Shop() {
       </div>
 
       <header style={styles.header}>
-        <div style={styles.logoBox}>
+        <div>
           <h1 style={styles.logo}>POLODIEU</h1>
           <p style={styles.logoSub}>Online Store</p>
         </div>
@@ -308,42 +486,35 @@ function Shop() {
         </aside>
 
         <section style={styles.content}>
-          <section style={styles.hero}>
+          <section
+            style={{
+              ...styles.hero,
+              backgroundImage: `linear-gradient(90deg, rgba(17,24,39,0.95), rgba(249,115,22,0.65)), url(${currentPromo.image})`
+            }}
+          >
             <div>
-              <span style={styles.badge}>Cameroon Online Store</span>
-              <h2 style={styles.heroTitle}>
-                Big deals on phones, electronics, fashion and home essentials.
-              </h2>
-              <p style={styles.heroText}>
-                Shop quality products, pay with MTN MoMo, and confirm your order
-                instantly through WhatsApp.
-              </p>
+              <span style={styles.badge}>Moving Promotion</span>
+              <h2 style={styles.heroTitle}>{currentPromo.title}</h2>
+              <p style={styles.heroText}>{currentPromo.text}</p>
               <button
                 style={styles.heroButton}
-                onClick={() =>
-                  window.scrollTo({ top: 620, behavior: "smooth" })
-                }
+                onClick={() => window.scrollTo({ top: 620, behavior: "smooth" })}
               >
                 Shop Now
               </button>
-            </div>
-          </section>
 
-          <section style={styles.categoryTiles}>
-            {defaultCategories
-              .filter((cat) => cat !== "ALL")
-              .map((cat) => (
-                <button
-                  key={cat}
-                  style={{
-                    ...styles.categoryTile,
-                    backgroundImage: `linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.5)), url(${categoryImages[cat]})`
-                  }}
-                  onClick={() => setCategory(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
+              <div style={styles.dots}>
+                {promoSlides.map((_, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      ...styles.dot,
+                      background: slide === index ? "#f97316" : "white"
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
           </section>
 
           <section style={styles.sectionHeader}>
@@ -370,55 +541,41 @@ function Shop() {
             </select>
           </section>
 
-          {filteredProducts.length === 0 ? (
-            <div style={styles.emptyState}>
-              <h3>No products available right now</h3>
-              <p style={styles.muted}>
-                Add products in this category from your admin panel.
-              </p>
-            </div>
-          ) : (
-            <section style={styles.grid}>
-              {filteredProducts.map((p) => (
-                <article key={p.id} style={styles.card}>
-                  <div style={styles.imageWrap}>
-                    {p.image ? (
-                      <img src={p.image} alt={p.name} style={styles.image} />
-                    ) : (
-                      <div style={styles.noImage}>No Image</div>
-                    )}
+          <section style={styles.grid}>
+            {filteredProducts.map((p) => (
+              <article key={p.id} style={styles.card}>
+                <div style={styles.imageWrap}>
+                  {p.image ? (
+                    <img src={p.image} alt={p.name} style={styles.image} />
+                  ) : (
+                    <div style={styles.noImage}>No Image</div>
+                  )}
 
-                    {p.stock <= 0 && (
-                      <span style={styles.stockBadge}>Sold out</span>
-                    )}
-                  </div>
+                  {String(p.id).startsWith("demo") && (
+                    <span style={styles.demoBadge}>Estimate</span>
+                  )}
+                </div>
 
-                  <div style={styles.cardBody}>
-                    <p style={styles.category}>{p.category || "General"}</p>
-                    <h3 style={styles.productName}>{p.name}</h3>
+                <div style={styles.cardBody}>
+                  <p style={styles.category}>{p.category || "General"}</p>
+                  <h3 style={styles.productName}>{p.name}</h3>
 
-                    <p style={styles.price}>
-                      {Number(p.price).toLocaleString()} FCFA
-                    </p>
+                  <p style={styles.price}>
+                    {Number(p.price).toLocaleString()} FCFA
+                  </p>
 
-                    <p style={styles.stock}>Stock: {p.stock}</p>
+                  <p style={styles.stock}>Stock: {p.stock}</p>
 
-                    <button
-                      style={{
-                        ...styles.addButton,
-                        opacity: p.stock <= 0 ? 0.45 : 1,
-                        cursor: p.stock <= 0 ? "not-allowed" : "pointer"
-                      }}
-                      disabled={p.stock <= 0}
-                      onClick={() => addToCart(p)}
-                    >
-                      {p.stock <= 0 ? "Unavailable" : "Add to Cart"}
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </section>
-          )}
+                  <button
+                    style={styles.addButton}
+                    onClick={() => addToCart(p)}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </article>
+            ))}
+          </section>
 
           <section style={styles.trustSection}>
             <div>✅ Secure MTN MoMo Payment</div>
@@ -455,45 +612,23 @@ function Shop() {
                 <div style={styles.cartItems}>
                   {cart.map((item) => (
                     <div key={item.id} style={styles.cartItem}>
-                      {item.image ? (
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          style={styles.cartImage}
-                        />
-                      ) : (
-                        <div style={styles.cartNoImage}>No Image</div>
-                      )}
+                      <img src={item.image} alt={item.name} style={styles.cartImage} />
 
                       <div style={{ flex: 1 }}>
                         <h3 style={styles.cartName}>{item.name}</h3>
                         <p style={styles.price}>
-                          {(Number(item.price) * item.quantity).toLocaleString()}{" "}
-                          FCFA
+                          {(Number(item.price) * item.quantity).toLocaleString()} FCFA
                         </p>
-                        <p style={styles.stock}>Available: {item.stock}</p>
 
                         <div style={styles.qtyRow}>
-                          <button
-                            style={styles.qtyBtn}
-                            onClick={() => changeQuantity(item.id, -1)}
-                          >
+                          <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, -1)}>
                             −
                           </button>
-
                           <b>{item.quantity}</b>
-
-                          <button
-                            style={styles.qtyBtn}
-                            onClick={() => changeQuantity(item.id, 1)}
-                          >
+                          <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, 1)}>
                             +
                           </button>
-
-                          <button
-                            style={styles.removeBtn}
-                            onClick={() => removeFromCart(item.id)}
-                          >
+                          <button style={styles.removeBtn} onClick={() => removeFromCart(item.id)}>
                             Remove
                           </button>
                         </div>
@@ -528,14 +663,7 @@ function Shop() {
                     <p style={styles.paymentMessage}>{paymentMessage}</p>
                   )}
 
-                  <button
-                    style={{
-                      ...styles.payButton,
-                      opacity: loading ? 0.65 : 1
-                    }}
-                    onClick={handleCheckout}
-                    disabled={loading}
-                  >
+                  <button style={styles.payButton} onClick={handleCheckout} disabled={loading}>
                     {loading ? "Processing payment..." : "Complete Payment"}
                   </button>
                 </div>
@@ -549,439 +677,63 @@ function Shop() {
 }
 
 const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#f3f4f6",
-    color: "#111827",
-    fontFamily: "Arial, sans-serif"
-  },
-  topBar: {
-    background: "#111827",
-    color: "white",
-    padding: "9px 24px",
-    fontSize: "13px",
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "12px",
-    flexWrap: "wrap"
-  },
-  header: {
-    background: "white",
-    padding: "18px 24px",
-    display: "grid",
-    gridTemplateColumns: "220px 1fr 130px",
-    gap: "18px",
-    alignItems: "center",
-    boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-    position: "sticky",
-    top: 0,
-    zIndex: 20
-  },
-  logoBox: {
-    lineHeight: 1
-  },
-  logo: {
-    margin: 0,
-    fontSize: "30px",
-    fontWeight: "900",
-    letterSpacing: "-1px",
-    color: "#f97316"
-  },
-  logoSub: {
-    margin: "4px 0 0",
-    fontSize: "13px",
-    color: "#6b7280"
-  },
-  searchBox: {
-    display: "flex",
-    border: "2px solid #f97316",
-    borderRadius: "8px",
-    overflow: "hidden",
-    background: "white"
-  },
-  searchInput: {
-    flex: 1,
-    border: "none",
-    padding: "13px",
-    fontSize: "15px",
-    outline: "none"
-  },
-  searchButton: {
-    border: "none",
-    background: "#f97316",
-    color: "white",
-    padding: "0 20px",
-    fontWeight: "800",
-    cursor: "pointer"
-  },
-  cartButton: {
-    border: "none",
-    background: "#111827",
-    color: "white",
-    padding: "13px 15px",
-    borderRadius: "8px",
-    fontWeight: "800",
-    cursor: "pointer"
-  },
-  menuBar: {
-    background: "#f97316",
-    color: "white",
-    padding: "0 24px",
-    display: "flex",
-    gap: "4px",
-    overflowX: "auto"
-  },
-  menuItem: {
-    border: "none",
-    background: "transparent",
-    color: "white",
-    padding: "13px 16px",
-    fontWeight: "700",
-    cursor: "pointer",
-    whiteSpace: "nowrap"
-  },
-  layout: {
-    maxWidth: "1320px",
-    margin: "22px auto",
-    padding: "0 18px",
-    display: "grid",
-    gridTemplateColumns: "250px 1fr",
-    gap: "20px"
-  },
-  sidebar: {
-    background: "white",
-    borderRadius: "12px",
-    padding: "14px",
-    height: "fit-content",
-    boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
-    position: "sticky",
-    top: "105px"
-  },
-  sidebarTitle: {
-    margin: "0 0 12px",
-    fontSize: "18px"
-  },
-  sideCategory: {
-    display: "block",
-    width: "100%",
-    textAlign: "left",
-    padding: "11px 12px",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "700",
-    marginBottom: "4px"
-  },
-  content: {
-    minWidth: 0
-  },
-  hero: {
-    minHeight: "300px",
-    borderRadius: "16px",
-    padding: "38px",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    background:
-      "linear-gradient(90deg, rgba(17,24,39,0.95), rgba(249,115,22,0.72)), url(https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?auto=format&fit=crop&w=1600&q=80)",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    boxShadow: "0 10px 28px rgba(0,0,0,0.15)"
-  },
-  badge: {
-    background: "rgba(255,255,255,0.18)",
-    padding: "8px 12px",
-    borderRadius: "999px",
-    fontWeight: "800",
-    fontSize: "13px"
-  },
-  heroTitle: {
-    fontSize: "clamp(32px, 5vw, 56px)",
-    lineHeight: 1,
-    maxWidth: "760px",
-    margin: "18px 0"
-  },
-  heroText: {
-    maxWidth: "640px",
-    fontSize: "17px",
-    color: "#f9fafb",
-    lineHeight: 1.6
-  },
-  heroButton: {
-    marginTop: "12px",
-    border: "none",
-    background: "white",
-    color: "#111827",
-    padding: "14px 22px",
-    borderRadius: "8px",
-    fontWeight: "900",
-    cursor: "pointer"
-  },
-  categoryTiles: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(145px, 1fr))",
-    gap: "12px",
-    margin: "18px 0"
-  },
-  categoryTile: {
-    height: "110px",
-    border: "none",
-    borderRadius: "14px",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    color: "white",
-    fontWeight: "900",
-    fontSize: "15px",
-    cursor: "pointer",
-    textAlign: "left",
-    padding: "14px",
-    display: "flex",
-    alignItems: "end",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.12)"
-  },
-  sectionHeader: {
-    background: "white",
-    borderRadius: "12px",
-    padding: "16px",
-    marginBottom: "16px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "12px",
-    flexWrap: "wrap",
-    boxShadow: "0 4px 14px rgba(0,0,0,0.06)"
-  },
-  sectionTitle: {
-    margin: 0,
-    fontSize: "24px"
-  },
-  muted: {
-    color: "#6b7280",
-    margin: "6px 0"
-  },
-  select: {
-    padding: "12px",
-    borderRadius: "8px",
-    border: "1px solid #d1d5db"
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "16px"
-  },
-  card: {
-    background: "white",
-    borderRadius: "14px",
-    overflow: "hidden",
-    boxShadow: "0 5px 18px rgba(0,0,0,0.07)"
-  },
-  imageWrap: {
-    position: "relative",
-    background: "#e5e7eb"
-  },
-  image: {
-    width: "100%",
-    height: "210px",
-    objectFit: "cover",
-    display: "block"
-  },
-  noImage: {
-    height: "210px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#6b7280"
-  },
-  stockBadge: {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    background: "#dc2626",
-    color: "white",
-    padding: "6px 9px",
-    borderRadius: "999px",
-    fontSize: "12px",
-    fontWeight: "800"
-  },
-  cardBody: {
-    padding: "14px"
-  },
-  category: {
-    margin: 0,
-    color: "#f97316",
-    fontWeight: "900",
-    fontSize: "12px",
-    textTransform: "uppercase"
-  },
-  productName: {
-    margin: "8px 0",
-    fontSize: "17px"
-  },
-  price: {
-    color: "#111827",
-    fontWeight: "900",
-    margin: "6px 0"
-  },
-  stock: {
-    color: "#6b7280",
-    margin: "5px 0",
-    fontSize: "13px"
-  },
-  addButton: {
-    width: "100%",
-    marginTop: "10px",
-    border: "none",
-    background: "#f97316",
-    color: "white",
-    borderRadius: "8px",
-    padding: "12px",
-    fontWeight: "900",
-    cursor: "pointer"
-  },
-  emptyState: {
-    background: "white",
-    borderRadius: "14px",
-    padding: "34px",
-    textAlign: "center"
-  },
-  trustSection: {
-    margin: "24px 0",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
-    gap: "12px"
-  },
-  overlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "flex-end",
-    zIndex: 1000
-  },
-  drawer: {
-    width: "100%",
-    maxWidth: "460px",
-    height: "100vh",
-    background: "white",
-    padding: "22px",
-    boxSizing: "border-box",
-    overflowY: "auto"
-  },
-  drawerHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    borderBottom: "1px solid #e5e7eb",
-    paddingBottom: "14px",
-    marginBottom: "16px"
-  },
-  closeBtn: {
-    border: "none",
-    background: "#111827",
-    color: "white",
-    borderRadius: "8px",
-    padding: "8px 12px",
-    cursor: "pointer"
-  },
-  emptyCart: {
-    textAlign: "center",
-    padding: "50px 0"
-  },
-  cartItems: {
-    display: "grid",
-    gap: "12px"
-  },
-  cartItem: {
-    display: "flex",
-    gap: "12px",
-    border: "1px solid #e5e7eb",
-    borderRadius: "12px",
-    padding: "12px"
-  },
-  cartImage: {
-    width: "80px",
-    height: "80px",
-    objectFit: "cover",
-    borderRadius: "10px"
-  },
-  cartNoImage: {
-    width: "80px",
-    height: "80px",
-    borderRadius: "10px",
-    background: "#e5e7eb",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "12px"
-  },
-  cartName: {
-    margin: "0 0 6px",
-    fontSize: "16px"
-  },
-  qtyRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    flexWrap: "wrap"
-  },
-  qtyBtn: {
-    width: "30px",
-    height: "30px",
-    borderRadius: "8px",
-    border: "1px solid #d1d5db",
-    background: "white",
-    cursor: "pointer",
-    fontWeight: "900"
-  },
-  removeBtn: {
-    padding: "8px 10px",
-    border: "none",
-    borderRadius: "8px",
-    background: "#fee2e2",
-    color: "#991b1b",
-    cursor: "pointer",
-    fontWeight: "800"
-  },
-  checkout: {
-    marginTop: "20px",
-    paddingTop: "16px",
-    borderTop: "1px solid #e5e7eb"
-  },
-  totalBox: {
-    background: "#111827",
-    color: "white",
-    borderRadius: "12px",
-    padding: "16px",
-    marginBottom: "14px",
-    display: "flex",
-    justifyContent: "space-between"
-  },
-  input: {
-    width: "100%",
-    padding: "13px",
-    borderRadius: "10px",
-    border: "1px solid #d1d5db",
-    marginBottom: "12px",
-    boxSizing: "border-box"
-  },
-  paymentMessage: {
-    background: "#ecfdf5",
-    border: "1px solid #bbf7d0",
-    color: "#166534",
-    padding: "12px",
-    borderRadius: "10px",
-    marginBottom: "12px"
-  },
-  payButton: {
-    width: "100%",
-    padding: "14px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#16a34a",
-    color: "white",
-    cursor: "pointer",
-    fontWeight: "900",
-    fontSize: "16px"
-  }
+  page: { minHeight: "100vh", background: "#f3f4f6", color: "#111827", fontFamily: "Arial, sans-serif" },
+  topBar: { background: "#111827", color: "white", padding: "9px 24px", fontSize: "13px", display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" },
+  header: { background: "white", padding: "18px 24px", display: "grid", gridTemplateColumns: "220px 1fr 130px", gap: "18px", alignItems: "center", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", position: "sticky", top: 0, zIndex: 20 },
+  logo: { margin: 0, fontSize: "30px", fontWeight: "900", color: "#f97316" },
+  logoSub: { margin: "4px 0 0", fontSize: "13px", color: "#6b7280" },
+  searchBox: { display: "flex", border: "2px solid #f97316", borderRadius: "8px", overflow: "hidden" },
+  searchInput: { flex: 1, border: "none", padding: "13px", fontSize: "15px", outline: "none" },
+  searchButton: { border: "none", background: "#f97316", color: "white", padding: "0 20px", fontWeight: "800" },
+  cartButton: { border: "none", background: "#111827", color: "white", padding: "13px", borderRadius: "8px", fontWeight: "800" },
+  menuBar: { background: "#f97316", padding: "0 24px", display: "flex", overflowX: "auto" },
+  menuItem: { border: "none", background: "transparent", color: "white", padding: "13px 16px", fontWeight: "700", whiteSpace: "nowrap" },
+  layout: { maxWidth: "1320px", margin: "22px auto", padding: "0 18px", display: "grid", gridTemplateColumns: "250px 1fr", gap: "20px" },
+  sidebar: { background: "white", borderRadius: "12px", padding: "14px", height: "fit-content", boxShadow: "0 4px 14px rgba(0,0,0,0.06)" },
+  sidebarTitle: { margin: "0 0 12px" },
+  sideCategory: { display: "block", width: "100%", textAlign: "left", padding: "11px 12px", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "700", marginBottom: "4px" },
+  content: { minWidth: 0 },
+  hero: { minHeight: "320px", borderRadius: "16px", padding: "38px", color: "white", display: "flex", alignItems: "center", backgroundSize: "cover", backgroundPosition: "center", transition: "0.5s ease" },
+  badge: { background: "rgba(255,255,255,0.18)", padding: "8px 12px", borderRadius: "999px", fontWeight: "800", fontSize: "13px" },
+  heroTitle: { fontSize: "clamp(32px, 5vw, 56px)", lineHeight: 1, maxWidth: "760px", margin: "18px 0" },
+  heroText: { maxWidth: "640px", fontSize: "17px", color: "#f9fafb", lineHeight: 1.6 },
+  heroButton: { marginTop: "12px", border: "none", background: "white", color: "#111827", padding: "14px 22px", borderRadius: "8px", fontWeight: "900" },
+  dots: { display: "flex", gap: "8px", marginTop: "18px" },
+  dot: { width: "34px", height: "6px", borderRadius: "999px", display: "inline-block" },
+  sectionHeader: { background: "white", borderRadius: "12px", padding: "16px", margin: "18px 0 16px", display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap", boxShadow: "0 4px 14px rgba(0,0,0,0.06)" },
+  sectionTitle: { margin: 0, fontSize: "24px" },
+  muted: { color: "#6b7280", margin: "6px 0" },
+  select: { padding: "12px", borderRadius: "8px", border: "1px solid #d1d5db" },
+  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" },
+  card: { background: "white", borderRadius: "14px", overflow: "hidden", boxShadow: "0 5px 18px rgba(0,0,0,0.07)" },
+  imageWrap: { position: "relative", background: "#e5e7eb" },
+  image: { width: "100%", height: "210px", objectFit: "cover", display: "block" },
+  noImage: { height: "210px", display: "flex", alignItems: "center", justifyContent: "center", color: "#6b7280" },
+  demoBadge: { position: "absolute", top: "10px", right: "10px", background: "#f97316", color: "white", padding: "6px 9px", borderRadius: "999px", fontSize: "12px", fontWeight: "800" },
+  cardBody: { padding: "14px" },
+  category: { margin: 0, color: "#f97316", fontWeight: "900", fontSize: "12px", textTransform: "uppercase" },
+  productName: { margin: "8px 0", fontSize: "17px" },
+  price: { color: "#111827", fontWeight: "900", margin: "6px 0" },
+  stock: { color: "#6b7280", margin: "5px 0", fontSize: "13px" },
+  addButton: { width: "100%", marginTop: "10px", border: "none", background: "#f97316", color: "white", borderRadius: "8px", padding: "12px", fontWeight: "900" },
+  trustSection: { margin: "24px 0", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "12px" },
+  overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "flex-end", zIndex: 1000 },
+  drawer: { width: "100%", maxWidth: "460px", height: "100vh", background: "white", padding: "22px", boxSizing: "border-box", overflowY: "auto" },
+  drawerHeader: { display: "flex", justifyContent: "space-between", borderBottom: "1px solid #e5e7eb", paddingBottom: "14px", marginBottom: "16px" },
+  closeBtn: { border: "none", background: "#111827", color: "white", borderRadius: "8px", padding: "8px 12px" },
+  emptyCart: { textAlign: "center", padding: "50px 0" },
+  cartItems: { display: "grid", gap: "12px" },
+  cartItem: { display: "flex", gap: "12px", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "12px" },
+  cartImage: { width: "80px", height: "80px", objectFit: "cover", borderRadius: "10px" },
+  cartName: { margin: "0 0 6px", fontSize: "16px" },
+  qtyRow: { display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" },
+  qtyBtn: { width: "30px", height: "30px", borderRadius: "8px", border: "1px solid #d1d5db", background: "white", fontWeight: "900" },
+  removeBtn: { padding: "8px 10px", border: "none", borderRadius: "8px", background: "#fee2e2", color: "#991b1b", fontWeight: "800" },
+  checkout: { marginTop: "20px", paddingTop: "16px", borderTop: "1px solid #e5e7eb" },
+  totalBox: { background: "#111827", color: "white", borderRadius: "12px", padding: "16px", marginBottom: "14px", display: "flex", justifyContent: "space-between" },
+  input: { width: "100%", padding: "13px", borderRadius: "10px", border: "1px solid #d1d5db", marginBottom: "12px", boxSizing: "border-box" },
+  paymentMessage: { background: "#ecfdf5", border: "1px solid #bbf7d0", color: "#166534", padding: "12px", borderRadius: "10px", marginBottom: "12px" },
+  payButton: { width: "100%", padding: "14px", border: "none", borderRadius: "10px", background: "#16a34a", color: "white", fontWeight: "900", fontSize: "16px" }
 };
 
 export default Shop;

@@ -12,6 +12,9 @@ function Shop() {
   const [loading, setLoading] = useState(false);
   const [paymentMessage, setPaymentMessage] = useState("");
 
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("ALL");
+
   useEffect(() => {
     loadProducts();
   }, []);
@@ -21,6 +24,22 @@ function Shop() {
     const data = await res.json();
     setProducts(data);
   }
+
+  const categories = [
+    "ALL",
+    ...new Set(products.map((p) => p.category).filter(Boolean))
+  ];
+
+  const filteredProducts = products.filter((p) => {
+    const matchesSearch = p.name
+      ?.toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesCategory =
+      category === "ALL" || p.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
 
   function addToCart(product) {
     if (product.stock <= 0) {
@@ -221,36 +240,61 @@ function Shop() {
         </button>
       </header>
 
+      <div style={styles.filterCard}>
+        <input
+          style={styles.input}
+          placeholder="Search products..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <select
+          style={styles.input}
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat === "ALL" ? "All categories" : cat}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <h2>Products</h2>
 
-      <div style={styles.grid}>
-        {products.map((p) => (
-          <div key={p.id} style={styles.card}>
-            {p.image ? (
-              <img src={p.image} alt={p.name} style={styles.image} />
-            ) : (
-              <div style={styles.noImage}>No Image</div>
-            )}
+      {filteredProducts.length === 0 ? (
+        <p style={styles.muted}>No products found.</p>
+      ) : (
+        <div style={styles.grid}>
+          {filteredProducts.map((p) => (
+            <div key={p.id} style={styles.card}>
+              {p.image ? (
+                <img src={p.image} alt={p.name} style={styles.image} />
+              ) : (
+                <div style={styles.noImage}>No Image</div>
+              )}
 
-            <h3>{p.name}</h3>
-            <p style={styles.price}>{Number(p.price).toLocaleString()} FCFA</p>
-            <p style={styles.muted}>{p.category || "No category"}</p>
-            <p style={styles.muted}>Stock: {p.stock}</p>
+              <h3>{p.name}</h3>
+              <p style={styles.price}>{Number(p.price).toLocaleString()} FCFA</p>
+              <p style={styles.muted}>{p.category || "No category"}</p>
+              <p style={styles.muted}>Stock: {p.stock}</p>
 
-            <button
-              style={{
-                ...styles.primaryBtn,
-                opacity: p.stock <= 0 ? 0.5 : 1,
-                cursor: p.stock <= 0 ? "not-allowed" : "pointer"
-              }}
-              disabled={p.stock <= 0}
-              onClick={() => addToCart(p)}
-            >
-              {p.stock <= 0 ? "Out of Stock" : "Add to Cart"}
-            </button>
-          </div>
-        ))}
-      </div>
+              <button
+                style={{
+                  ...styles.primaryBtn,
+                  opacity: p.stock <= 0 ? 0.5 : 1,
+                  cursor: p.stock <= 0 ? "not-allowed" : "pointer"
+                }}
+                disabled={p.stock <= 0}
+                onClick={() => addToCart(p)}
+              >
+                {p.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {cartOpen && (
         <div style={styles.overlay}>
@@ -371,6 +415,16 @@ const styles = {
   title: {
     margin: 0,
     fontSize: "32px"
+  },
+  filterCard: {
+    background: "white",
+    padding: "16px",
+    borderRadius: "16px",
+    marginBottom: "20px",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "12px",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.06)"
   },
   muted: {
     color: "#6b7280",

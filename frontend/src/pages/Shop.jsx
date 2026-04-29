@@ -480,7 +480,7 @@ function Shop() {
       </nav>
 
       <main style={styles.layout}>
-        <aside style={{ ...styles.sidebar, position: window.innerWidth < 768 ? "static" : "sticky" }}>
+        <aside style={window.innerWidth < 768 ? styles.mobileCategories : styles.sidebar}>
           <h3 style={styles.sidebarTitle}>Categories</h3>
 
           {categories.map((cat) => (
@@ -1177,7 +1177,16 @@ const styles = {
     color: "white",
     fontWeight: "900",
     fontSize: "16px"
-  }
+  },
+  mobileCategories: {
+  background: "white",
+  borderRadius: "12px",
+  padding: "10px",
+  display: "flex",
+  gap: "8px",
+  overflowX: "auto",
+  boxShadow: "0 4px 14px rgba(0,0,0,0.06)"
+},
 };
 
 export default Shop;

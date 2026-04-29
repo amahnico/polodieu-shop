@@ -481,8 +481,9 @@ function Shop() {
 
       <main style={styles.layout}>
         <aside style={window.innerWidth < 768 ? styles.mobileCategories : styles.sidebar}>
-          <h3 style={styles.sidebarTitle}>Categories</h3>
-
+          {window.innerWidth >= 768 && (
+  <h3 style={styles.sidebarTitle}>Categories</h3>
+)}
           {categories.map((cat) => (
             <button
               key={cat}

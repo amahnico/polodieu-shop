@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
 const API_URL = "https://polodieu-shop.onrender.com";
+const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dhaq7puzh/image/upload";
+const CLOUDINARY_PRESET = "polodieu_upload";
 
 const emptyProduct = {
   name: "",
@@ -17,6 +19,7 @@ function Admin() {
   const [orders, setOrders] = useState([]);
   const [editing, setEditing] = useState(null);
   const [newProduct, setNewProduct] = useState(emptyProduct);
+  const [uploading, setUploading] = useState(false);
 
   function authHeaders() {
     return {
@@ -74,6 +77,44 @@ function Admin() {
 
     const data = await res.json();
     setOrders(data);
+  }
+
+  async function uploadImage(file, type) {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_PRESET);
+
+    try {
+      setUploading(true);
+
+      const res = await fetch(CLOUDINARY_URL, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (!data.secure_url) {
+        alert("Image upload failed");
+        return;
+      }
+
+      if (type === "new") {
+        setNewProduct((prev) => ({ ...prev, image: data.secure_url }));
+      }
+
+      if (type === "edit") {
+        setEditing((prev) => ({ ...prev, image: data.secure_url }));
+      }
+
+      alert("Image uploaded");
+    } catch {
+      alert("Image upload failed");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function addProduct() {
@@ -225,15 +266,24 @@ function Admin() {
           <input style={styles.input} type="number" placeholder="Stock" value={newProduct.stock}
             onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })} />
 
-          <input style={{ ...styles.input, gridColumn: "1 / -1" }} placeholder="Image URL" value={newProduct.image}
+          <input
+            style={styles.input}
+            type="file"
+            accept="image/*"
+            onChange={(e) => uploadImage(e.target.files[0], "new")}
+          />
+
+          <input style={styles.input} placeholder="Image URL" value={newProduct.image}
             onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })} />
         </div>
+
+        {uploading && <p style={styles.muted}>Uploading image...</p>}
 
         {newProduct.image && (
           <img src={newProduct.image} alt="Preview" style={styles.previewImage} />
         )}
 
-        <button style={styles.primaryBtn} onClick={addProduct}>
+        <button style={styles.primaryBtn} onClick={addProduct} disabled={uploading}>
           Add Product
         </button>
       </div>
@@ -255,16 +305,27 @@ function Admin() {
             <input style={styles.input} type="number" placeholder="Stock" value={editing.stock || ""}
               onChange={(e) => setEditing({ ...editing, stock: e.target.value })} />
 
-            <input style={{ ...styles.input, gridColumn: "1 / -1" }} placeholder="Image URL" value={editing.image || ""}
+            <input
+              style={styles.input}
+              type="file"
+              accept="image/*"
+              onChange={(e) => uploadImage(e.target.files[0], "edit")}
+            />
+
+            <input style={styles.input} placeholder="Image URL" value={editing.image || ""}
               onChange={(e) => setEditing({ ...editing, image: e.target.value })} />
           </div>
+
+          {uploading && <p style={styles.muted}>Uploading image...</p>}
 
           {editing.image && (
             <img src={editing.image} alt="Preview" style={styles.previewImage} />
           )}
 
           <div style={styles.actions}>
-            <button style={styles.primaryBtn} onClick={saveEdit}>Save Changes</button>
+            <button style={styles.primaryBtn} onClick={saveEdit} disabled={uploading}>
+              Save Changes
+            </button>
             <button style={styles.grayBtn} onClick={() => setEditing(null)}>Cancel</button>
           </div>
         </div>

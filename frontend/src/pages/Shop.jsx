@@ -5,6 +5,7 @@ const API_URL = "https://polodieu-shop.onrender.com";
 function Shop() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
@@ -32,6 +33,8 @@ function Shop() {
     } else {
       setCart([...cart, { ...product, quantity: 1 }]);
     }
+
+    setCartOpen(true);
   }
 
   function removeFromCart(id) {
@@ -86,10 +89,14 @@ function Shop() {
     }
 
     alert("Order placed successfully");
+
     setCart([]);
     setPhone("");
     setAddress("");
+    setCartOpen(false);
   }
+
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div style={styles.page}>
@@ -99,94 +106,114 @@ function Shop() {
           <p style={styles.muted}>Shop your favorite products.</p>
         </div>
 
-        <div style={styles.cartBadge}>
-          🛒 {cart.length} item{cart.length !== 1 ? "s" : ""}
-        </div>
+        <button style={styles.cartBadge} onClick={() => setCartOpen(true)}>
+          🛒 {cartCount} item{cartCount !== 1 ? "s" : ""}
+        </button>
       </header>
 
-      <section>
-        <h2>Products</h2>
+      <h2>Products</h2>
 
-        <div style={styles.grid}>
-          {products.map((p) => (
-            <div key={p.id} style={styles.card}>
-              {p.image ? (
-                <img src={p.image} alt={p.name} style={styles.image} />
-              ) : (
-                <div style={styles.noImage}>No Image</div>
-              )}
+      <div style={styles.grid}>
+        {products.map((p) => (
+          <div key={p.id} style={styles.card}>
+            {p.image ? (
+              <img src={p.image} alt={p.name} style={styles.image} />
+            ) : (
+              <div style={styles.noImage}>No Image</div>
+            )}
 
-              <h3>{p.name}</h3>
-              <p style={styles.price}>
-                {Number(p.price).toLocaleString()} FCFA
-              </p>
-              <p style={styles.muted}>{p.category || "No category"}</p>
-              <p style={styles.muted}>Stock: {p.stock}</p>
+            <h3>{p.name}</h3>
+            <p style={styles.price}>{Number(p.price).toLocaleString()} FCFA</p>
+            <p style={styles.muted}>{p.category || "No category"}</p>
+            <p style={styles.muted}>Stock: {p.stock}</p>
 
-              <button style={styles.primaryBtn} onClick={() => addToCart(p)}>
-                Add to Cart
+            <button style={styles.primaryBtn} onClick={() => addToCart(p)}>
+              Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {cartOpen && (
+        <div style={styles.overlay}>
+          <div style={styles.drawer}>
+            <div style={styles.drawerHeader}>
+              <h2>Your Cart</h2>
+
+              <button style={styles.closeBtn} onClick={() => setCartOpen(false)}>
+                ✕
               </button>
             </div>
-          ))}
-        </div>
-      </section>
 
-      <section style={styles.cartSection}>
-        <h2>Cart</h2>
+            {cart.length === 0 ? (
+              <p style={styles.muted}>Your cart is empty.</p>
+            ) : (
+              <>
+                <div style={styles.cartItems}>
+                  {cart.map((item) => (
+                    <div key={item.id} style={styles.cartItem}>
+                      {item.image ? (
+                        <img src={item.image} alt={item.name} style={styles.cartImage} />
+                      ) : (
+                        <div style={styles.cartNoImage}>No Image</div>
+                      )}
 
-        {cart.length === 0 ? (
-          <p style={styles.muted}>Your cart is empty.</p>
-        ) : (
-          <>
-            {cart.map((item) => (
-              <div key={item.id} style={styles.cartItem}>
-                <div>
-                  <h3>{item.name}</h3>
-                  <p style={styles.price}>
-                    {(Number(item.price) * item.quantity).toLocaleString()} FCFA
-                  </p>
+                      <div style={{ flex: 1 }}>
+                        <h3 style={{ margin: "0 0 6px" }}>{item.name}</h3>
+
+                        <p style={styles.price}>
+                          {(Number(item.price) * item.quantity).toLocaleString()} FCFA
+                        </p>
+
+                        <div style={styles.qtyRow}>
+                          <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, -1)}>
+                            -
+                          </button>
+
+                          <b>{item.quantity}</b>
+
+                          <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, 1)}>
+                            +
+                          </button>
+
+                          <button
+                            style={styles.removeBtn}
+                            onClick={() => removeFromCart(item.id)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                <div style={styles.cartActions}>
-                  <button onClick={() => changeQuantity(item.id, -1)}>-</button>
-                  <b>{item.quantity}</b>
-                  <button onClick={() => changeQuantity(item.id, 1)}>+</button>
-                  <button
-                    style={styles.deleteBtn}
-                    onClick={() => removeFromCart(item.id)}
-                  >
-                    Remove
+                <div style={styles.checkout}>
+                  <h2>Total: {total.toLocaleString()} FCFA</h2>
+
+                  <input
+                    style={styles.input}
+                    placeholder="Phone number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+
+                  <input
+                    style={styles.input}
+                    placeholder="Delivery address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+
+                  <button style={styles.primaryBtnFull} onClick={placeOrder}>
+                    Place Order
                   </button>
                 </div>
-              </div>
-            ))}
-
-            <h2>Total: {total.toLocaleString()} FCFA</h2>
-
-            <div style={styles.checkoutBox}>
-              <h2>Checkout</h2>
-
-              <input
-                style={styles.input}
-                placeholder="Phone number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-
-              <input
-                style={styles.input}
-                placeholder="Delivery address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-
-              <button style={styles.primaryBtn} onClick={placeOrder}>
-                Place Order
-              </button>
-            </div>
-          </>
-        )}
-      </section>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -222,9 +249,11 @@ const styles = {
   cartBadge: {
     background: "#111827",
     color: "white",
-    padding: "10px 14px",
+    padding: "12px 18px",
     borderRadius: "999px",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    border: "none",
+    cursor: "pointer"
   },
   grid: {
     display: "grid",
@@ -266,48 +295,110 @@ const styles = {
     cursor: "pointer",
     fontWeight: "bold"
   },
-  deleteBtn: {
+  primaryBtnFull: {
+    width: "100%",
+    padding: "13px 16px",
+    border: "none",
+    borderRadius: "10px",
+    background: "#16a34a",
+    color: "white",
+    cursor: "pointer",
+    fontWeight: "bold",
+    fontSize: "16px"
+  },
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.45)",
+    display: "flex",
+    justifyContent: "flex-end",
+    zIndex: 1000
+  },
+  drawer: {
+    width: "100%",
+    maxWidth: "430px",
+    height: "100vh",
+    background: "white",
+    padding: "20px",
+    boxSizing: "border-box",
+    overflowY: "auto",
+    boxShadow: "-8px 0 30px rgba(0,0,0,0.2)"
+  },
+  drawerHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottom: "1px solid #e5e7eb",
+    marginBottom: "16px"
+  },
+  closeBtn: {
+    border: "none",
+    background: "#111827",
+    color: "white",
+    borderRadius: "10px",
     padding: "8px 12px",
+    cursor: "pointer"
+  },
+  cartItems: {
+    display: "grid",
+    gap: "12px"
+  },
+  cartItem: {
+    display: "flex",
+    gap: "12px",
+    border: "1px solid #e5e7eb",
+    borderRadius: "14px",
+    padding: "12px",
+    alignItems: "center"
+  },
+  cartImage: {
+    width: "80px",
+    height: "80px",
+    objectFit: "cover",
+    borderRadius: "12px",
+    background: "#e5e7eb"
+  },
+  cartNoImage: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "12px",
+    background: "#e5e7eb",
+    color: "#6b7280",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "12px"
+  },
+  qtyRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    flexWrap: "wrap"
+  },
+  qtyBtn: {
+    width: "30px",
+    height: "30px",
+    borderRadius: "8px",
+    border: "1px solid #d1d5db",
+    background: "white",
+    cursor: "pointer",
+    fontWeight: "bold"
+  },
+  removeBtn: {
+    padding: "8px 10px",
     border: "none",
     borderRadius: "8px",
     background: "#dc2626",
     color: "white",
     cursor: "pointer"
   },
-  cartSection: {
-    marginTop: "32px",
-    background: "white",
-    padding: "20px",
-    borderRadius: "16px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)"
-  },
-  cartItem: {
-    border: "1px solid #e5e7eb",
-    padding: "14px",
-    borderRadius: "12px",
-    marginBottom: "12px",
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "12px",
-    alignItems: "center",
-    flexWrap: "wrap"
-  },
-  cartActions: {
-    display: "flex",
-    gap: "10px",
-    alignItems: "center",
-    flexWrap: "wrap"
-  },
-  checkoutBox: {
+  checkout: {
     marginTop: "20px",
-    padding: "16px",
-    borderRadius: "12px",
-    background: "#f9fafb"
+    paddingTop: "16px",
+    borderTop: "1px solid #e5e7eb"
   },
   input: {
-    display: "block",
     width: "100%",
-    maxWidth: "420px",
     padding: "12px",
     borderRadius: "10px",
     border: "1px solid #d1d5db",

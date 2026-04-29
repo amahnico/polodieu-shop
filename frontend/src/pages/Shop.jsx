@@ -11,7 +11,6 @@ function Shop() {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [paymentMessage, setPaymentMessage] = useState("");
-
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("ALL");
 
@@ -31,27 +30,19 @@ function Shop() {
   ];
 
   const filteredProducts = products.filter((p) => {
-    const matchesSearch = p.name
-      ?.toLowerCase()
-      .includes(search.toLowerCase());
-
+    const matchesSearch = p.name?.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = category === "ALL" || p.category === category;
-
     return matchesSearch && matchesCategory;
   });
 
   function addToCart(product) {
-    if (product.stock <= 0) {
-      alert("Out of stock");
-      return;
-    }
+    if (product.stock <= 0) return alert("Out of stock");
 
     const found = cart.find((item) => item.id === product.id);
 
     if (found) {
       if (found.quantity >= product.stock) {
-        alert("Cannot add more than available stock");
-        return;
+        return alert("Cannot add more than available stock");
       }
 
       setCart(
@@ -78,7 +69,6 @@ function Shop() {
         if (item.id !== id) return item;
 
         const nextQuantity = item.quantity + amount;
-
         if (nextQuantity < 1) return item;
 
         if (nextQuantity > item.stock) {
@@ -156,15 +146,8 @@ function Shop() {
   }
 
   async function handleCheckout() {
-    if (cart.length === 0) {
-      alert("Cart is empty");
-      return;
-    }
-
-    if (!phone || !address) {
-      alert("Phone and address are required");
-      return;
-    }
+    if (cart.length === 0) return alert("Cart is empty");
+    if (!phone || !address) return alert("Phone and address are required");
 
     try {
       setLoading(true);
@@ -172,9 +155,7 @@ function Shop() {
 
       const orderRes = await fetch(`${API_URL}/orders`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           phone,
           address,
@@ -196,9 +177,7 @@ function Shop() {
 
       const paymentRes = await fetch(`${API_URL}/payment/mtn`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: total,
           phone,
@@ -230,8 +209,10 @@ function Shop() {
     <div style={styles.page}>
       <header style={styles.nav}>
         <div>
-          <h1 style={styles.logo}>Polodieu Shop</h1>
-          <p style={styles.navText}>Premium products. Simple shopping.</p>
+          <h1 style={styles.logo}>POLODIEU</h1>
+          <p style={styles.navText}>
+            Smart shopping. Fast delivery. Easy MoMo payment.
+          </p>
         </div>
 
         <button style={styles.cartButton} onClick={() => setCartOpen(true)}>
@@ -241,19 +222,35 @@ function Shop() {
 
       <section style={styles.hero}>
         <div>
-          <span style={styles.badge}>Online Store</span>
-          <h2 style={styles.heroTitle}>Shop quality products with easy MTN MoMo payment.</h2>
+          <span style={styles.badge}>Cameroon Online Store</span>
+
+          <h2 style={styles.heroTitle}>
+            Quality products delivered with trust.
+          </h2>
+
           <p style={styles.heroText}>
-            Browse products, add to cart, pay securely, and send your order directly through WhatsApp.
+            Shop carefully selected products, pay securely with MTN MoMo,
+            and confirm your order instantly through WhatsApp.
           </p>
-          <button style={styles.heroButton} onClick={() => window.scrollTo({ top: 420, behavior: "smooth" })}>
-            Start Shopping
+
+          <button
+            style={styles.heroButton}
+            onClick={() => window.scrollTo({ top: 420, behavior: "smooth" })}
+          >
+            Shop Now
           </button>
+
+          <p style={styles.trustText}>
+            Secure checkout • WhatsApp confirmation • Fast local delivery
+          </p>
         </div>
 
         <div style={styles.heroCard}>
-          <h3 style={{ marginTop: 0 }}>Fast checkout</h3>
-          <p style={styles.muted}>MTN MoMo + WhatsApp order confirmation</p>
+          <h3 style={{ marginTop: 0 }}>Trusted by local shoppers</h3>
+          <p style={styles.muted}>
+            Fast, secure, and simple checkout experience
+          </p>
+
           <div style={styles.statRow}>
             <div>
               <b>{products.length}</b>
@@ -274,8 +271,10 @@ function Shop() {
       <main style={styles.main}>
         <section style={styles.toolbar}>
           <div>
-            <h2 style={styles.sectionTitle}>Featured Products</h2>
-            <p style={styles.muted}>Find what you need quickly.</p>
+            <h2 style={styles.sectionTitle}>Shop Our Collection</h2>
+            <p style={styles.muted}>
+              Browse our available products and order instantly.
+            </p>
           </div>
 
           <div style={styles.filters}>
@@ -302,8 +301,10 @@ function Shop() {
 
         {filteredProducts.length === 0 ? (
           <div style={styles.emptyState}>
-            <h3>No products found</h3>
-            <p style={styles.muted}>Try another search or category.</p>
+            <h3>No products available right now</h3>
+            <p style={styles.muted}>
+              Please check back later or explore other categories.
+            </p>
           </div>
         ) : (
           <section style={styles.grid}>
@@ -316,7 +317,9 @@ function Shop() {
                     <div style={styles.noImage}>No Image</div>
                   )}
 
-                  {p.stock <= 0 && <span style={styles.stockBadge}>Sold out</span>}
+                  {p.stock <= 0 && (
+                    <span style={styles.stockBadge}>Sold out</span>
+                  )}
                 </div>
 
                 <div style={styles.cardBody}>
@@ -355,8 +358,10 @@ function Shop() {
           <aside style={styles.drawer}>
             <div style={styles.drawerHeader}>
               <div>
-                <h2 style={{ margin: 0 }}>Your Cart</h2>
-                <p style={styles.muted}>{cartCount} item{cartCount !== 1 ? "s" : ""}</p>
+                <h2 style={{ margin: 0 }}>Your Shopping Cart</h2>
+                <p style={styles.muted}>
+                  {cartCount} item{cartCount !== 1 ? "s" : ""}
+                </p>
               </div>
 
               <button style={styles.closeBtn} onClick={() => setCartOpen(false)}>
@@ -375,7 +380,11 @@ function Shop() {
                   {cart.map((item) => (
                     <div key={item.id} style={styles.cartItem}>
                       {item.image ? (
-                        <img src={item.image} alt={item.name} style={styles.cartImage} />
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          style={styles.cartImage}
+                        />
                       ) : (
                         <div style={styles.cartNoImage}>No Image</div>
                       )}
@@ -388,17 +397,26 @@ function Shop() {
                         <p style={styles.stock}>Available: {item.stock}</p>
 
                         <div style={styles.qtyRow}>
-                          <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, -1)}>
+                          <button
+                            style={styles.qtyBtn}
+                            onClick={() => changeQuantity(item.id, -1)}
+                          >
                             −
                           </button>
 
                           <b>{item.quantity}</b>
 
-                          <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, 1)}>
+                          <button
+                            style={styles.qtyBtn}
+                            onClick={() => changeQuantity(item.id, 1)}
+                          >
                             +
                           </button>
 
-                          <button style={styles.removeBtn} onClick={() => removeFromCart(item.id)}>
+                          <button
+                            style={styles.removeBtn}
+                            onClick={() => removeFromCart(item.id)}
+                          >
                             Remove
                           </button>
                         </div>
@@ -441,7 +459,7 @@ function Shop() {
                     onClick={handleCheckout}
                     disabled={loading}
                   >
-                    {loading ? "Processing payment..." : "Pay with MTN MoMo"}
+                    {loading ? "Processing payment..." : "Complete Payment"}
                   </button>
                 </div>
               </>
@@ -464,7 +482,7 @@ const styles = {
   nav: {
     maxWidth: "1180px",
     margin: "0 auto 22px",
-    background: "rgba(255,255,255,0.9)",
+    background: "rgba(255,255,255,0.92)",
     backdropFilter: "blur(12px)",
     border: "1px solid #e5e7eb",
     borderRadius: "22px",
@@ -478,8 +496,9 @@ const styles = {
   },
   logo: {
     margin: 0,
-    fontSize: "28px",
-    letterSpacing: "-0.04em"
+    fontSize: "30px",
+    fontWeight: "950",
+    letterSpacing: "-0.05em"
   },
   navText: {
     margin: "5px 0 0",
@@ -491,7 +510,7 @@ const styles = {
     color: "white",
     padding: "12px 16px",
     borderRadius: "999px",
-    fontWeight: "800",
+    fontWeight: "900",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -510,7 +529,8 @@ const styles = {
   hero: {
     maxWidth: "1180px",
     margin: "0 auto 26px",
-    background: "linear-gradient(135deg, #111827 0%, #1f2937 55%, #15803d 100%)",
+    background:
+      "linear-gradient(135deg, #111827 0%, #1f2937 55%, #15803d 100%)",
     color: "white",
     borderRadius: "30px",
     padding: "42px",
@@ -526,7 +546,7 @@ const styles = {
     padding: "8px 12px",
     borderRadius: "999px",
     fontSize: "13px",
-    fontWeight: "700"
+    fontWeight: "800"
   },
   heroTitle: {
     fontSize: "clamp(34px, 5vw, 58px)",
@@ -545,10 +565,16 @@ const styles = {
     border: "none",
     background: "white",
     color: "#111827",
-    padding: "14px 20px",
+    padding: "14px 22px",
     borderRadius: "999px",
-    fontWeight: "900",
+    fontWeight: "950",
     cursor: "pointer"
+  },
+  trustText: {
+    marginTop: "12px",
+    color: "#d1d5db",
+    fontSize: "14px",
+    fontWeight: "500"
   },
   heroCard: {
     background: "rgba(255,255,255,0.12)",
@@ -642,7 +668,7 @@ const styles = {
     margin: 0,
     color: "#16a34a",
     fontSize: "13px",
-    fontWeight: "800",
+    fontWeight: "900",
     textTransform: "uppercase"
   },
   productName: {
@@ -657,7 +683,7 @@ const styles = {
   },
   price: {
     color: "#111827",
-    fontWeight: "900",
+    fontWeight: "950",
     margin: "0 0 4px"
   },
   stock: {

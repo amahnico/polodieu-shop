@@ -35,8 +35,7 @@ function Shop() {
       ?.toLowerCase()
       .includes(search.toLowerCase());
 
-    const matchesCategory =
-      category === "ALL" || p.category === category;
+    const matchesCategory = category === "ALL" || p.category === category;
 
     return matchesSearch && matchesCategory;
   });
@@ -229,78 +228,136 @@ function Shop() {
 
   return (
     <div style={styles.page}>
-      <header style={styles.header}>
+      <header style={styles.nav}>
         <div>
-          <h1 style={styles.title}>Polodieu Shop</h1>
-          <p style={styles.muted}>Shop your favorite products.</p>
+          <h1 style={styles.logo}>Polodieu Shop</h1>
+          <p style={styles.navText}>Premium products. Simple shopping.</p>
         </div>
 
-        <button style={styles.cartBadge} onClick={() => setCartOpen(true)}>
-          🛒 {cartCount} item{cartCount !== 1 ? "s" : ""}
+        <button style={styles.cartButton} onClick={() => setCartOpen(true)}>
+          🛒 Cart <span style={styles.cartPill}>{cartCount}</span>
         </button>
       </header>
 
-      <div style={styles.filterCard}>
-        <input
-          style={styles.input}
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        <select
-          style={styles.input}
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat === "ALL" ? "All categories" : cat}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <h2>Products</h2>
-
-      {filteredProducts.length === 0 ? (
-        <p style={styles.muted}>No products found.</p>
-      ) : (
-        <div style={styles.grid}>
-          {filteredProducts.map((p) => (
-            <div key={p.id} style={styles.card}>
-              {p.image ? (
-                <img src={p.image} alt={p.name} style={styles.image} />
-              ) : (
-                <div style={styles.noImage}>No Image</div>
-              )}
-
-              <h3>{p.name}</h3>
-              <p style={styles.price}>{Number(p.price).toLocaleString()} FCFA</p>
-              <p style={styles.muted}>{p.category || "No category"}</p>
-              <p style={styles.muted}>Stock: {p.stock}</p>
-
-              <button
-                style={{
-                  ...styles.primaryBtn,
-                  opacity: p.stock <= 0 ? 0.5 : 1,
-                  cursor: p.stock <= 0 ? "not-allowed" : "pointer"
-                }}
-                disabled={p.stock <= 0}
-                onClick={() => addToCart(p)}
-              >
-                {p.stock <= 0 ? "Out of Stock" : "Add to Cart"}
-              </button>
-            </div>
-          ))}
+      <section style={styles.hero}>
+        <div>
+          <span style={styles.badge}>Online Store</span>
+          <h2 style={styles.heroTitle}>Shop quality products with easy MTN MoMo payment.</h2>
+          <p style={styles.heroText}>
+            Browse products, add to cart, pay securely, and send your order directly through WhatsApp.
+          </p>
+          <button style={styles.heroButton} onClick={() => window.scrollTo({ top: 420, behavior: "smooth" })}>
+            Start Shopping
+          </button>
         </div>
-      )}
+
+        <div style={styles.heroCard}>
+          <h3 style={{ marginTop: 0 }}>Fast checkout</h3>
+          <p style={styles.muted}>MTN MoMo + WhatsApp order confirmation</p>
+          <div style={styles.statRow}>
+            <div>
+              <b>{products.length}</b>
+              <span>Products</span>
+            </div>
+            <div>
+              <b>{categories.length - 1}</b>
+              <span>Categories</span>
+            </div>
+            <div>
+              <b>{cartCount}</b>
+              <span>In cart</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <main style={styles.main}>
+        <section style={styles.toolbar}>
+          <div>
+            <h2 style={styles.sectionTitle}>Featured Products</h2>
+            <p style={styles.muted}>Find what you need quickly.</p>
+          </div>
+
+          <div style={styles.filters}>
+            <input
+              style={styles.input}
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+            <select
+              style={styles.input}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat === "ALL" ? "All categories" : cat}
+                </option>
+              ))}
+            </select>
+          </div>
+        </section>
+
+        {filteredProducts.length === 0 ? (
+          <div style={styles.emptyState}>
+            <h3>No products found</h3>
+            <p style={styles.muted}>Try another search or category.</p>
+          </div>
+        ) : (
+          <section style={styles.grid}>
+            {filteredProducts.map((p) => (
+              <article key={p.id} style={styles.card}>
+                <div style={styles.imageWrap}>
+                  {p.image ? (
+                    <img src={p.image} alt={p.name} style={styles.image} />
+                  ) : (
+                    <div style={styles.noImage}>No Image</div>
+                  )}
+
+                  {p.stock <= 0 && <span style={styles.stockBadge}>Sold out</span>}
+                </div>
+
+                <div style={styles.cardBody}>
+                  <p style={styles.category}>{p.category || "General"}</p>
+                  <h3 style={styles.productName}>{p.name}</h3>
+
+                  <div style={styles.productFooter}>
+                    <div>
+                      <p style={styles.price}>
+                        {Number(p.price).toLocaleString()} FCFA
+                      </p>
+                      <p style={styles.stock}>Stock: {p.stock}</p>
+                    </div>
+
+                    <button
+                      style={{
+                        ...styles.addButton,
+                        opacity: p.stock <= 0 ? 0.45 : 1,
+                        cursor: p.stock <= 0 ? "not-allowed" : "pointer"
+                      }}
+                      disabled={p.stock <= 0}
+                      onClick={() => addToCart(p)}
+                    >
+                      {p.stock <= 0 ? "Unavailable" : "Add"}
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </section>
+        )}
+      </main>
 
       {cartOpen && (
         <div style={styles.overlay}>
-          <div style={styles.drawer}>
+          <aside style={styles.drawer}>
             <div style={styles.drawerHeader}>
-              <h2>Your Cart</h2>
+              <div>
+                <h2 style={{ margin: 0 }}>Your Cart</h2>
+                <p style={styles.muted}>{cartCount} item{cartCount !== 1 ? "s" : ""}</p>
+              </div>
 
               <button style={styles.closeBtn} onClick={() => setCartOpen(false)}>
                 ✕
@@ -308,7 +365,10 @@ function Shop() {
             </div>
 
             {cart.length === 0 ? (
-              <p style={styles.muted}>Your cart is empty.</p>
+              <div style={styles.emptyCart}>
+                <h3>Your cart is empty</h3>
+                <p style={styles.muted}>Add products to continue.</p>
+              </div>
             ) : (
               <>
                 <div style={styles.cartItems}>
@@ -321,17 +381,15 @@ function Shop() {
                       )}
 
                       <div style={{ flex: 1 }}>
-                        <h3 style={{ margin: "0 0 6px" }}>{item.name}</h3>
-
+                        <h3 style={styles.cartName}>{item.name}</h3>
                         <p style={styles.price}>
                           {(Number(item.price) * item.quantity).toLocaleString()} FCFA
                         </p>
-
-                        <p style={styles.muted}>Available: {item.stock}</p>
+                        <p style={styles.stock}>Available: {item.stock}</p>
 
                         <div style={styles.qtyRow}>
                           <button style={styles.qtyBtn} onClick={() => changeQuantity(item.id, -1)}>
-                            -
+                            −
                           </button>
 
                           <b>{item.quantity}</b>
@@ -350,7 +408,10 @@ function Shop() {
                 </div>
 
                 <div style={styles.checkout}>
-                  <h2>Total: {total.toLocaleString()} FCFA</h2>
+                  <div style={styles.totalBox}>
+                    <span>Total</span>
+                    <b>{total.toLocaleString()} FCFA</b>
+                  </div>
 
                   <input
                     style={styles.input}
@@ -374,8 +435,8 @@ function Shop() {
 
                   <button
                     style={{
-                      ...styles.primaryBtnFull,
-                      opacity: loading ? 0.6 : 1
+                      ...styles.payButton,
+                      opacity: loading ? 0.65 : 1
                     }}
                     onClick={handleCheckout}
                     disabled={loading}
@@ -385,7 +446,7 @@ function Shop() {
                 </div>
               </>
             )}
-          </div>
+          </aside>
         </div>
       )}
     </div>
@@ -395,133 +456,273 @@ function Shop() {
 const styles = {
   page: {
     minHeight: "100vh",
-    padding: "24px",
-    fontFamily: "Arial",
-    background: "#f4f6f8",
-    color: "#111827"
+    background: "linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%)",
+    color: "#111827",
+    fontFamily: "Inter, Arial, sans-serif",
+    padding: "20px"
   },
-  header: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "16px",
-    marginBottom: "24px",
+  nav: {
+    maxWidth: "1180px",
+    margin: "0 auto 22px",
+    background: "rgba(255,255,255,0.9)",
+    backdropFilter: "blur(12px)",
+    border: "1px solid #e5e7eb",
+    borderRadius: "22px",
+    padding: "18px 22px",
     display: "flex",
-    justifyContent: "space-between",
     alignItems: "center",
-    gap: "14px",
+    justifyContent: "space-between",
+    gap: "16px",
     flexWrap: "wrap",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)"
+    boxShadow: "0 12px 30px rgba(15,23,42,0.06)"
   },
-  title: {
+  logo: {
     margin: 0,
-    fontSize: "32px"
+    fontSize: "28px",
+    letterSpacing: "-0.04em"
   },
-  filterCard: {
-    background: "white",
-    padding: "16px",
-    borderRadius: "16px",
-    marginBottom: "20px",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "12px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)"
+  navText: {
+    margin: "5px 0 0",
+    color: "#64748b"
   },
-  muted: {
-    color: "#6b7280",
-    margin: "6px 0"
-  },
-  cartBadge: {
+  cartButton: {
+    border: "none",
     background: "#111827",
     color: "white",
-    padding: "12px 18px",
+    padding: "12px 16px",
     borderRadius: "999px",
-    fontWeight: "bold",
+    fontWeight: "800",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px"
+  },
+  cartPill: {
+    background: "#22c55e",
+    color: "#052e16",
+    minWidth: "24px",
+    height: "24px",
+    borderRadius: "999px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  hero: {
+    maxWidth: "1180px",
+    margin: "0 auto 26px",
+    background: "linear-gradient(135deg, #111827 0%, #1f2937 55%, #15803d 100%)",
+    color: "white",
+    borderRadius: "30px",
+    padding: "42px",
+    display: "grid",
+    gridTemplateColumns: "1.6fr 1fr",
+    gap: "24px",
+    boxShadow: "0 24px 60px rgba(15,23,42,0.18)"
+  },
+  badge: {
+    display: "inline-block",
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.25)",
+    padding: "8px 12px",
+    borderRadius: "999px",
+    fontSize: "13px",
+    fontWeight: "700"
+  },
+  heroTitle: {
+    fontSize: "clamp(34px, 5vw, 58px)",
+    lineHeight: 1,
+    margin: "18px 0",
+    letterSpacing: "-0.06em"
+  },
+  heroText: {
+    color: "#d1d5db",
+    maxWidth: "620px",
+    fontSize: "17px",
+    lineHeight: 1.6
+  },
+  heroButton: {
+    marginTop: "14px",
     border: "none",
+    background: "white",
+    color: "#111827",
+    padding: "14px 20px",
+    borderRadius: "999px",
+    fontWeight: "900",
     cursor: "pointer"
+  },
+  heroCard: {
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.22)",
+    borderRadius: "24px",
+    padding: "22px",
+    alignSelf: "end"
+  },
+  statRow: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: "10px",
+    marginTop: "22px"
+  },
+  main: {
+    maxWidth: "1180px",
+    margin: "0 auto"
+  },
+  toolbar: {
+    display: "flex",
+    alignItems: "end",
+    justifyContent: "space-between",
+    gap: "16px",
+    flexWrap: "wrap",
+    marginBottom: "18px"
+  },
+  sectionTitle: {
+    margin: 0,
+    fontSize: "28px",
+    letterSpacing: "-0.04em"
+  },
+  filters: {
+    display: "grid",
+    gridTemplateColumns: "minmax(200px, 280px) minmax(160px, 220px)",
+    gap: "10px"
+  },
+  input: {
+    width: "100%",
+    padding: "13px 14px",
+    borderRadius: "14px",
+    border: "1px solid #dbe2ea",
+    background: "white",
+    fontSize: "15px",
+    boxSizing: "border-box",
+    outline: "none"
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-    gap: "16px"
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: "18px"
   },
   card: {
     background: "white",
-    padding: "16px",
-    borderRadius: "16px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)"
+    border: "1px solid #e5e7eb",
+    borderRadius: "24px",
+    overflow: "hidden",
+    boxShadow: "0 10px 28px rgba(15,23,42,0.07)"
+  },
+  imageWrap: {
+    position: "relative",
+    background: "#f1f5f9"
   },
   image: {
     width: "100%",
-    height: "170px",
+    height: "220px",
     objectFit: "cover",
-    borderRadius: "12px",
-    background: "#e5e7eb"
+    display: "block"
   },
   noImage: {
-    height: "170px",
-    borderRadius: "12px",
-    background: "#e5e7eb",
+    height: "220px",
     display: "flex",
-    justifyContent: "center",
     alignItems: "center",
-    color: "#6b7280"
+    justifyContent: "center",
+    color: "#64748b"
+  },
+  stockBadge: {
+    position: "absolute",
+    top: "12px",
+    right: "12px",
+    background: "#dc2626",
+    color: "white",
+    padding: "7px 10px",
+    borderRadius: "999px",
+    fontSize: "12px",
+    fontWeight: "800"
+  },
+  cardBody: {
+    padding: "16px"
+  },
+  category: {
+    margin: 0,
+    color: "#16a34a",
+    fontSize: "13px",
+    fontWeight: "800",
+    textTransform: "uppercase"
+  },
+  productName: {
+    margin: "8px 0 16px",
+    fontSize: "19px"
+  },
+  productFooter: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "end",
+    gap: "12px"
   },
   price: {
-    color: "#16a34a",
-    fontWeight: "bold"
+    color: "#111827",
+    fontWeight: "900",
+    margin: "0 0 4px"
   },
-  primaryBtn: {
-    padding: "11px 16px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#16a34a",
-    color: "white",
-    cursor: "pointer",
-    fontWeight: "bold"
+  stock: {
+    color: "#64748b",
+    margin: 0,
+    fontSize: "13px"
   },
-  primaryBtnFull: {
-    width: "100%",
-    padding: "13px 16px",
+  addButton: {
     border: "none",
-    borderRadius: "10px",
-    background: "#16a34a",
+    background: "#111827",
     color: "white",
-    cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "16px"
+    borderRadius: "14px",
+    padding: "11px 15px",
+    fontWeight: "900",
+    cursor: "pointer"
+  },
+  muted: {
+    color: "#64748b",
+    margin: "6px 0"
+  },
+  emptyState: {
+    background: "white",
+    border: "1px dashed #cbd5e1",
+    borderRadius: "24px",
+    padding: "36px",
+    textAlign: "center"
   },
   overlay: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0,0,0,0.45)",
+    background: "rgba(15,23,42,0.52)",
     display: "flex",
     justifyContent: "flex-end",
     zIndex: 1000
   },
   drawer: {
     width: "100%",
-    maxWidth: "430px",
+    maxWidth: "460px",
     height: "100vh",
-    background: "white",
-    padding: "20px",
+    background: "#ffffff",
+    padding: "22px",
     boxSizing: "border-box",
     overflowY: "auto",
-    boxShadow: "-8px 0 30px rgba(0,0,0,0.2)"
+    boxShadow: "-18px 0 50px rgba(15,23,42,0.25)"
   },
   drawerHeader: {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "start",
     borderBottom: "1px solid #e5e7eb",
+    paddingBottom: "14px",
     marginBottom: "16px"
   },
   closeBtn: {
     border: "none",
-    background: "#111827",
-    color: "white",
-    borderRadius: "10px",
-    padding: "8px 12px",
-    cursor: "pointer"
+    background: "#f1f5f9",
+    color: "#111827",
+    borderRadius: "12px",
+    padding: "9px 12px",
+    cursor: "pointer",
+    fontWeight: "900"
+  },
+  emptyCart: {
+    textAlign: "center",
+    padding: "50px 0"
   },
   cartItems: {
     display: "grid",
@@ -531,72 +732,91 @@ const styles = {
     display: "flex",
     gap: "12px",
     border: "1px solid #e5e7eb",
-    borderRadius: "14px",
+    borderRadius: "18px",
     padding: "12px",
-    alignItems: "center"
+    alignItems: "center",
+    background: "#f8fafc"
   },
   cartImage: {
-    width: "80px",
-    height: "80px",
+    width: "82px",
+    height: "82px",
     objectFit: "cover",
-    borderRadius: "12px",
+    borderRadius: "16px",
     background: "#e5e7eb"
   },
   cartNoImage: {
-    width: "80px",
-    height: "80px",
-    borderRadius: "12px",
+    width: "82px",
+    height: "82px",
+    borderRadius: "16px",
     background: "#e5e7eb",
-    color: "#6b7280",
+    color: "#64748b",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontSize: "12px"
   },
+  cartName: {
+    margin: "0 0 6px",
+    fontSize: "16px"
+  },
   qtyRow: {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    marginTop: "8px"
   },
   qtyBtn: {
-    width: "30px",
-    height: "30px",
-    borderRadius: "8px",
+    width: "32px",
+    height: "32px",
+    borderRadius: "10px",
     border: "1px solid #d1d5db",
     background: "white",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "900"
   },
   removeBtn: {
     padding: "8px 10px",
     border: "none",
-    borderRadius: "8px",
-    background: "#dc2626",
-    color: "white",
-    cursor: "pointer"
+    borderRadius: "10px",
+    background: "#fee2e2",
+    color: "#991b1b",
+    cursor: "pointer",
+    fontWeight: "800"
   },
   checkout: {
     marginTop: "20px",
     paddingTop: "16px",
     borderTop: "1px solid #e5e7eb"
   },
-  input: {
-    width: "100%",
-    padding: "12px",
-    borderRadius: "10px",
-    border: "1px solid #d1d5db",
-    marginBottom: "12px",
-    fontSize: "15px",
-    boxSizing: "border-box"
+  totalBox: {
+    background: "#111827",
+    color: "white",
+    borderRadius: "18px",
+    padding: "16px",
+    marginBottom: "14px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   paymentMessage: {
     background: "#ecfdf5",
     border: "1px solid #bbf7d0",
     color: "#166534",
     padding: "12px",
-    borderRadius: "10px",
+    borderRadius: "14px",
     marginBottom: "12px"
+  },
+  payButton: {
+    width: "100%",
+    padding: "15px 16px",
+    border: "none",
+    borderRadius: "16px",
+    background: "#16a34a",
+    color: "white",
+    cursor: "pointer",
+    fontWeight: "900",
+    fontSize: "16px"
   }
 };
 

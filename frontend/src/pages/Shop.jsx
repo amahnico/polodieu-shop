@@ -18,19 +18,19 @@ function getRating(product) {
 
 const promoSlides = [
   {
-    title: "Big Tech Deals",
-    text: "Smart TVs, soundbars, appliances and home essentials.",
+    title: "Big Home & Electronics Deals",
+    text: "Smart TVs, appliances, soundbars, furniture and more.",
     image:
       "https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?auto=format&fit=crop&w=1600&q=80"
   },
   {
-    title: "Home Appliances",
-    text: "Upgrade your home with quality appliances and furniture.",
+    title: "Upgrade Your Home",
+    text: "Shop washing machines, fridges, microwaves and kitchen items.",
     image:
       "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1600&q=80"
   },
   {
-    title: "Office & Home",
+    title: "Office & Furniture",
     text: "Office chairs, tables, TV stands and dining sets.",
     image:
       "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80"
@@ -77,7 +77,7 @@ const demoProducts = [
   {
     id: "soundbar-samsung",
     name: "Samsung Soundbar",
-    category: "Electronics",
+    category: "Soundbars",
     price: 85000,
     stock: 7,
     image:
@@ -86,7 +86,7 @@ const demoProducts = [
   {
     id: "soundbar-lg",
     name: "LG Soundbar",
-    category: "Electronics",
+    category: "Soundbars",
     price: 90000,
     stock: 6,
     image:
@@ -95,7 +95,7 @@ const demoProducts = [
   {
     id: "soundbar-sony",
     name: "Sony Soundbar",
-    category: "Electronics",
+    category: "Soundbars",
     price: 120000,
     stock: 5,
     image:
@@ -104,7 +104,7 @@ const demoProducts = [
   {
     id: "gas-cooker",
     name: "Gas Cooker",
-    category: "Small Appliances",
+    category: "Kitchen Appliances",
     price: 95000,
     stock: 5,
     image:
@@ -158,7 +158,7 @@ const demoProducts = [
   {
     id: "distributor",
     name: "Power Extension Distributor",
-    category: "Home & Office",
+    category: "Electronics",
     price: 8000,
     stock: 30,
     image:
@@ -167,7 +167,7 @@ const demoProducts = [
   {
     id: "tv-stand",
     name: "TV Stand",
-    category: "Home & Office",
+    category: "Furniture",
     price: 45000,
     stock: 6,
     image:
@@ -185,7 +185,7 @@ const demoProducts = [
   {
     id: "office-chair",
     name: "Office Chair",
-    category: "Home & Office",
+    category: "Furniture",
     price: 40000,
     stock: 10,
     image:
@@ -194,7 +194,7 @@ const demoProducts = [
   {
     id: "office-table",
     name: "Office Table",
-    category: "Home & Office",
+    category: "Furniture",
     price: 60000,
     stock: 7,
     image:
@@ -203,7 +203,7 @@ const demoProducts = [
   {
     id: "dining-set",
     name: "Dining Set",
-    category: "Home & Office",
+    category: "Furniture",
     price: 180000,
     stock: 4,
     image:
@@ -214,13 +214,12 @@ const demoProducts = [
 const defaultCategories = [
   "ALL",
   "Smart TVs",
-  "Phones and Tablets",
-  "Apple",
-  "Informatique",
-  "Gaming",
+  "Soundbars",
   "Home Appliances",
+  "Kitchen Appliances",
   "Small Appliances",
   "Electronics",
+  "Furniture",
   "Home & Office"
 ];
 
@@ -235,9 +234,15 @@ function Shop() {
   const [paymentMessage, setPaymentMessage] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("ALL");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     loadProducts();
+
+    const resize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", resize);
+
+    return () => window.removeEventListener("resize", resize);
   }, []);
 
   useEffect(() => {
@@ -405,7 +410,8 @@ function Shop() {
       });
 
       if (!orderRes.ok) {
-        alert("Only real admin products can be ordered. Demo products are for display.");
+        openWhatsAppOrder("WHATSAPP-ORDER");
+        alert("Order sent to WhatsApp. Demo items are display items.");
         return;
       }
 
@@ -444,13 +450,18 @@ function Shop() {
   const currentPromo = promoSlides[slide];
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, paddingBottom: isMobile ? "76px" : 0 }}>
       <div style={styles.topBar}>
-        <span>Call / WhatsApp: +237 651 325 289</span>
-        <span>Fast local delivery • MTN MoMo accepted</span>
+        <span>🚚 Fast delivery in Cameroon</span>
+        <span>📞 WhatsApp: +237 651 325 289</span>
       </div>
 
-      <header style={styles.header}>
+      <header
+        style={{
+          ...styles.header,
+          gridTemplateColumns: isMobile ? "1fr" : "220px 1fr 130px"
+        }}
+      >
         <div>
           <h1 style={styles.logo}>POLODIEU</h1>
           <p style={styles.logoSub}>Online Store</p>
@@ -466,9 +477,11 @@ function Shop() {
           <button style={styles.searchButton}>Search</button>
         </div>
 
-        <button style={styles.cartButton} onClick={() => setCartOpen(true)}>
-          🛒 Cart <b>{cartCount}</b>
-        </button>
+        {!isMobile && (
+          <button style={styles.cartButton} onClick={() => setCartOpen(true)}>
+            🛒 Cart <b>{cartCount}</b>
+          </button>
+        )}
       </header>
 
       <nav style={styles.menuBar}>
@@ -479,16 +492,22 @@ function Shop() {
         <button style={styles.menuItem}>Delivery Info</button>
       </nav>
 
-      <main style={styles.layout}>
-        <aside style={window.innerWidth < 768 ? styles.mobileCategories : styles.sidebar}>
-          {window.innerWidth >= 768 && (
-  <h3 style={styles.sidebarTitle}>Categories</h3>
-)}
+      <main
+        style={{
+          ...styles.layout,
+          gridTemplateColumns: isMobile ? "1fr" : "250px 1fr"
+        }}
+      >
+        <aside style={isMobile ? styles.mobileCategories : styles.sidebar}>
+          {!isMobile && <h3 style={styles.sidebarTitle}>Categories</h3>}
+
           {categories.map((cat) => (
             <button
               key={cat}
               style={{
                 ...styles.sideCategory,
+                minWidth: isMobile ? "140px" : "100%",
+                marginBottom: isMobile ? 0 : "4px",
                 background: category === cat ? "#f97316" : "transparent",
                 color: category === cat ? "white" : "#111827"
               }}
@@ -503,12 +522,21 @@ function Shop() {
           <section
             style={{
               ...styles.hero,
+              minHeight: isMobile ? "220px" : "320px",
+              padding: isMobile ? "22px" : "38px",
               backgroundImage: `linear-gradient(90deg, rgba(17,24,39,0.95), rgba(249,115,22,0.65)), url(${currentPromo.image})`
             }}
           >
             <div>
               <span style={styles.badge}>Moving Promotion</span>
-              <h2 style={styles.heroTitle}>{currentPromo.title}</h2>
+              <h2
+                style={{
+                  ...styles.heroTitle,
+                  fontSize: isMobile ? "30px" : "clamp(32px, 5vw, 56px)"
+                }}
+              >
+                {currentPromo.title}
+              </h2>
               <p style={styles.heroText}>{currentPromo.text}</p>
 
               <button
@@ -542,7 +570,14 @@ function Shop() {
               </p>
             </div>
 
-            <div style={styles.flashGrid}>
+            <div
+              style={{
+                ...styles.flashGrid,
+                gridTemplateColumns: isMobile
+                  ? "repeat(2, 1fr)"
+                  : "repeat(auto-fit, minmax(180px, 1fr))"
+              }}
+            >
               {products.slice(0, 4).map((p) => (
                 <div key={p.id} style={styles.flashCard}>
                   <img src={p.image} alt={p.name} style={styles.flashImage} />
@@ -582,24 +617,44 @@ function Shop() {
             </select>
           </section>
 
-          <section style={styles.grid}>
+          <section
+            style={{
+              ...styles.grid,
+              gridTemplateColumns: isMobile
+                ? "repeat(2, 1fr)"
+                : "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: isMobile ? "10px" : "16px"
+            }}
+          >
             {filteredProducts.map((p) => (
               <article key={p.id} style={styles.card}>
                 <div style={styles.imageWrap}>
-                  <span style={styles.discountBadge}>
-                    -{getDiscount(p)}%
-                  </span>
+                  <span style={styles.discountBadge}>-{getDiscount(p)}%</span>
 
                   {p.image ? (
-                    <img src={p.image} alt={p.name} style={styles.image} />
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      style={{
+                        ...styles.image,
+                        height: isMobile ? "130px" : "210px"
+                      }}
+                    />
                   ) : (
                     <div style={styles.noImage}>No Image</div>
                   )}
                 </div>
 
-                <div style={styles.cardBody}>
+                <div style={{ ...styles.cardBody, padding: isMobile ? "10px" : "14px" }}>
                   <p style={styles.category}>{p.category || "General"}</p>
-                  <h3 style={styles.productName}>{p.name}</h3>
+                  <h3
+                    style={{
+                      ...styles.productName,
+                      fontSize: isMobile ? "14px" : "17px"
+                    }}
+                  >
+                    {p.name}
+                  </h3>
 
                   <p style={styles.rating}>★★★★★ ({getRating(p)})</p>
 
@@ -611,12 +666,7 @@ function Shop() {
                     {Number(p.price).toLocaleString()} FCFA
                   </p>
 
-                  <p style={styles.stock}>Stock: {p.stock}</p>
-
-                  <button
-                    style={styles.addButton}
-                    onClick={() => addToCart(p)}
-                  >
+                  <button style={styles.addButton} onClick={() => addToCart(p)}>
                     Add to Cart
                   </button>
                 </div>
@@ -741,6 +791,14 @@ function Shop() {
           </aside>
         </div>
       )}
+
+      <nav style={styles.bottomNav}>
+        <button style={styles.bottomNavBtn}>🏠 Home</button>
+        <button style={styles.bottomNavBtn} onClick={() => setCartOpen(true)}>
+          🛒 Cart ({cartCount})
+        </button>
+        <button style={styles.bottomNavBtn}>👤 Account</button>
+      </nav>
     </div>
   );
 }
@@ -750,12 +808,13 @@ const styles = {
     minHeight: "100vh",
     background: "#f3f4f6",
     color: "#111827",
-    fontFamily: "Arial, sans-serif"
+    fontFamily: "Arial, sans-serif",
+    overflowX: "hidden"
   },
   topBar: {
     background: "#111827",
     color: "white",
-    padding: "9px 24px",
+    padding: "9px 16px",
     fontSize: "13px",
     display: "flex",
     justifyContent: "space-between",
@@ -764,10 +823,9 @@ const styles = {
   },
   header: {
     background: "white",
-    padding: "18px 24px",
+    padding: "16px",
     display: "grid",
-    gridTemplateColumns: window.innerWidth < 768 ? "1fr" : "220px 1fr 130px",
-    gap: "18px",
+    gap: "14px",
     alignItems: "center",
     boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
     position: "sticky",
@@ -789,20 +847,22 @@ const styles = {
     display: "flex",
     border: "2px solid #f97316",
     borderRadius: "8px",
-    overflow: "hidden"
+    overflow: "hidden",
+    width: "100%"
   },
   searchInput: {
     flex: 1,
     border: "none",
     padding: "13px",
     fontSize: "15px",
-    outline: "none"
+    outline: "none",
+    minWidth: 0
   },
   searchButton: {
     border: "none",
     background: "#f97316",
     color: "white",
-    padding: "0 20px",
+    padding: "0 16px",
     fontWeight: "800"
   },
   cartButton: {
@@ -815,7 +875,7 @@ const styles = {
   },
   menuBar: {
     background: "#f97316",
-    padding: "0 24px",
+    padding: "0 14px",
     display: "flex",
     overflowX: "auto"
   },
@@ -829,40 +889,46 @@ const styles = {
   },
   layout: {
     maxWidth: "1320px",
-    margin: "22px auto",
-    padding: "0 18px",
+    margin: "18px auto",
+    padding: "0 12px",
     display: "grid",
-    gridTemplateColumns: window.innerWidth < 768 ? "1fr" : "250px 1fr",
-    gap: "20px"
+    gap: "16px"
   },
   sidebar: {
     background: "white",
     borderRadius: "12px",
     padding: "14px",
     height: "fit-content",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
+    position: "sticky",
+    top: "110px"
+  },
+  mobileCategories: {
+    background: "white",
+    borderRadius: "12px",
+    padding: "10px",
+    display: "flex",
+    gap: "8px",
+    overflowX: "auto",
     boxShadow: "0 4px 14px rgba(0,0,0,0.06)"
   },
   sidebarTitle: {
     margin: "0 0 12px"
   },
   sideCategory: {
-    display: "block",
-    width: "100%",
     textAlign: "left",
     padding: "11px 12px",
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
     fontWeight: "700",
-    marginBottom: "4px"
+    whiteSpace: "nowrap"
   },
   content: {
     minWidth: 0
   },
   hero: {
-    minHeight: "320px",
     borderRadius: "16px",
-    padding: "38px",
     color: "white",
     display: "flex",
     alignItems: "center",
@@ -878,14 +944,13 @@ const styles = {
     fontSize: "13px"
   },
   heroTitle: {
-    fontSize: "clamp(32px, 5vw, 56px)",
     lineHeight: 1,
     maxWidth: "760px",
     margin: "18px 0"
   },
   heroText: {
     maxWidth: "640px",
-    fontSize: "17px",
+    fontSize: "15px",
     color: "#f9fafb",
     lineHeight: 1.6
   },
@@ -912,13 +977,13 @@ const styles = {
   flashDeals: {
     background: "white",
     borderRadius: "14px",
-    padding: "18px",
-    margin: "18px 0",
+    padding: "14px",
+    margin: "16px 0",
     boxShadow: "0 4px 14px rgba(0,0,0,0.06)"
   },
   flashTitle: {
     margin: 0,
-    fontSize: "24px"
+    fontSize: "22px"
   },
   flashText: {
     color: "#6b7280",
@@ -926,8 +991,7 @@ const styles = {
   },
   flashGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: "14px"
+    gap: "10px"
   },
   flashCard: {
     border: "1px solid #e5e7eb",
@@ -937,7 +1001,7 @@ const styles = {
   },
   flashImage: {
     width: "100%",
-    height: "120px",
+    height: "110px",
     objectFit: "cover",
     borderRadius: "10px",
     marginBottom: "8px"
@@ -946,7 +1010,7 @@ const styles = {
     background: "white",
     borderRadius: "12px",
     padding: "16px",
-    margin: "18px 0 16px",
+    margin: "16px 0",
     display: "flex",
     justifyContent: "space-between",
     gap: "12px",
@@ -967,9 +1031,7 @@ const styles = {
     border: "1px solid #d1d5db"
   },
   grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "16px"
+    display: "grid"
   },
   card: {
     background: "white",
@@ -983,12 +1045,11 @@ const styles = {
   },
   image: {
     width: "100%",
-    height: "210px",
     objectFit: "cover",
     display: "block"
   },
   noImage: {
-    height: "210px",
+    height: "160px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -996,13 +1057,13 @@ const styles = {
   },
   discountBadge: {
     position: "absolute",
-    top: "10px",
-    left: "10px",
+    top: "8px",
+    left: "8px",
     background: "#ef4444",
     color: "white",
-    padding: "6px 10px",
+    padding: "5px 8px",
     borderRadius: "999px",
-    fontSize: "12px",
+    fontSize: "11px",
     fontWeight: "900",
     zIndex: 2
   },
@@ -1013,22 +1074,23 @@ const styles = {
     margin: 0,
     color: "#f97316",
     fontWeight: "900",
-    fontSize: "12px",
+    fontSize: "11px",
     textTransform: "uppercase"
   },
   productName: {
     margin: "8px 0",
-    fontSize: "17px"
+    lineHeight: 1.25
   },
   rating: {
     color: "#f59e0b",
-    fontSize: "14px",
+    fontSize: "12px",
     margin: "4px 0"
   },
   oldPrice: {
     textDecoration: "line-through",
     color: "#9ca3af",
-    margin: "6px 0 0"
+    margin: "6px 0 0",
+    fontSize: "13px"
   },
   price: {
     color: "#111827",
@@ -1040,11 +1102,6 @@ const styles = {
     fontWeight: "900",
     margin: "4px 0"
   },
-  stock: {
-    color: "#6b7280",
-    margin: "5px 0",
-    fontSize: "13px"
-  },
   addButton: {
     width: "100%",
     marginTop: "10px",
@@ -1052,7 +1109,7 @@ const styles = {
     background: "#f97316",
     color: "white",
     borderRadius: "8px",
-    padding: "12px",
+    padding: "11px",
     fontWeight: "900"
   },
   trustSection: {
@@ -1179,15 +1236,26 @@ const styles = {
     fontWeight: "900",
     fontSize: "16px"
   },
-  mobileCategories: {
-  background: "white",
-  borderRadius: "12px",
-  padding: "10px",
-  display: "flex",
-  gap: "8px",
-  overflowX: "auto",
-  boxShadow: "0 4px 14px rgba(0,0,0,0.06)"
-},
+  bottomNav: {
+    display: window.innerWidth < 768 ? "grid" : "none",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    background: "white",
+    borderTop: "1px solid #e5e7eb",
+    boxShadow: "0 -6px 18px rgba(0,0,0,0.08)",
+    zIndex: 999,
+    padding: "8px"
+  },
+  bottomNavBtn: {
+    border: "none",
+    background: "transparent",
+    fontWeight: "800",
+    color: "#111827",
+    padding: "10px 4px"
+  }
 };
 
 export default Shop;

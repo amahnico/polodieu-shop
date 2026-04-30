@@ -44,6 +44,7 @@ const demoProducts = [
     category: "Smart TVs",
     price: 160000,
     stock: 8,
+    description: "Samsung 43 inch smart TV with clear picture quality, HDMI support, USB support, and internet apps.",
     image:
       "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80"
   },
@@ -53,6 +54,7 @@ const demoProducts = [
     category: "Smart TVs",
     price: 220000,
     stock: 6,
+    description: "LG 50 inch smart TV with bright display, streaming apps, and modern slim design.",
     image:
       "https://images.unsplash.com/photo-1601944177325-f8867652837f?auto=format&fit=crop&w=900&q=80"
   },
@@ -62,6 +64,7 @@ const demoProducts = [
     category: "Home Appliances",
     price: 180000,
     stock: 4,
+    description: "Automatic washing machine suitable for home use with strong washing performance.",
     image:
       "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=900&q=80"
   },
@@ -71,6 +74,7 @@ const demoProducts = [
     category: "Home Appliances",
     price: 75000,
     stock: 6,
+    description: "Microwave oven for heating, cooking, and quick meal preparation.",
     image:
       "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=80"
   },
@@ -80,6 +84,7 @@ const demoProducts = [
     category: "Soundbars",
     price: 85000,
     stock: 7,
+    description: "Samsung soundbar with powerful bass and clear home cinema audio.",
     image:
       "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=900&q=80"
   },
@@ -89,6 +94,7 @@ const demoProducts = [
     category: "Soundbars",
     price: 90000,
     stock: 6,
+    description: "LG soundbar for TV, music, movies, and improved home entertainment sound.",
     image:
       "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=900&q=80"
   },
@@ -98,6 +104,7 @@ const demoProducts = [
     category: "Soundbars",
     price: 120000,
     stock: 5,
+    description: "Sony soundbar with premium audio quality and deep bass experience.",
     image:
       "https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=900&q=80"
   },
@@ -107,6 +114,7 @@ const demoProducts = [
     category: "Kitchen Appliances",
     price: 95000,
     stock: 5,
+    description: "Durable gas cooker for daily cooking, suitable for family kitchen use.",
     image:
       "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80"
   },
@@ -116,6 +124,7 @@ const demoProducts = [
     category: "Small Appliances",
     price: 12000,
     stock: 20,
+    description: "Electric iron for smooth clothes finishing and everyday home use.",
     image:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80"
   },
@@ -125,6 +134,7 @@ const demoProducts = [
     category: "Small Appliances",
     price: 10000,
     stock: 25,
+    description: "Fast water boiler for tea, coffee, and kitchen use.",
     image:
       "https://images.unsplash.com/photo-1571552879083-e93b6ea70d1d?auto=format&fit=crop&w=900&q=80"
   },
@@ -134,6 +144,7 @@ const demoProducts = [
     category: "Small Appliances",
     price: 18000,
     stock: 18,
+    description: "Electric blender for juice, smoothies, sauce, and food preparation.",
     image:
       "https://images.unsplash.com/photo-1585237672814-8f85a8118bf5?auto=format&fit=crop&w=900&q=80"
   },
@@ -143,6 +154,7 @@ const demoProducts = [
     category: "Home & Office",
     price: 25000,
     stock: 12,
+    description: "Standing fan with strong airflow, ideal for home and office cooling.",
     image:
       "https://images.unsplash.com/photo-1581092160607-ee22731c2c9f?auto=format&fit=crop&w=900&q=80"
   },
@@ -152,6 +164,7 @@ const demoProducts = [
     category: "Home Appliances",
     price: 250000,
     stock: 3,
+    description: "Double door fridge with large storage capacity for food and drinks.",
     image:
       "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=900&q=80"
   },
@@ -161,6 +174,7 @@ const demoProducts = [
     category: "Electronics",
     price: 8000,
     stock: 30,
+    description: "Power extension distributor for connecting multiple appliances safely.",
     image:
       "https://images.unsplash.com/photo-1581093588401-22f5a78cbe64?auto=format&fit=crop&w=900&q=80"
   },
@@ -170,6 +184,7 @@ const demoProducts = [
     category: "Furniture",
     price: 45000,
     stock: 6,
+    description: "Modern TV stand for living room setup and media storage.",
     image:
       "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=80"
   },
@@ -179,6 +194,7 @@ const demoProducts = [
     category: "Electronics",
     price: 35000,
     stock: 10,
+    description: "Voltage regulator/stabilizer to help protect electronics from power fluctuation.",
     image:
       "https://images.unsplash.com/photo-1581090700227-1e8e0a5c8f19?auto=format&fit=crop&w=900&q=80"
   },
@@ -188,6 +204,7 @@ const demoProducts = [
     category: "Furniture",
     price: 40000,
     stock: 10,
+    description: "Comfortable office chair for work, study, and business use.",
     image:
       "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=900&q=80"
   },
@@ -197,6 +214,7 @@ const demoProducts = [
     category: "Furniture",
     price: 60000,
     stock: 7,
+    description: "Office table suitable for home office, business office, and study setup.",
     image:
       "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80"
   },
@@ -206,6 +224,7 @@ const demoProducts = [
     category: "Furniture",
     price: 180000,
     stock: 4,
+    description: "Dining table set for family meals and modern home decoration.",
     image:
       "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=900&q=80"
   }
@@ -228,6 +247,7 @@ function Shop() {
   const [slide, setSlide] = useState(0);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -645,7 +665,12 @@ function Shop() {
                   )}
                 </div>
 
-                <div style={{ ...styles.cardBody, padding: isMobile ? "10px" : "14px" }}>
+                <div
+                  style={{
+                    ...styles.cardBody,
+                    padding: isMobile ? "10px" : "14px"
+                  }}
+                >
                   <p style={styles.category}>{p.category || "General"}</p>
                   <h3
                     style={{
@@ -666,6 +691,13 @@ function Shop() {
                     {Number(p.price).toLocaleString()} FCFA
                   </p>
 
+                  <button
+                    style={styles.viewBtn}
+                    onClick={() => setSelectedProduct(p)}
+                  >
+                    View Details
+                  </button>
+
                   <button style={styles.addButton} onClick={() => addToCart(p)}>
                     Add to Cart
                   </button>
@@ -682,6 +714,45 @@ function Shop() {
           </section>
         </section>
       </main>
+
+      {selectedProduct && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modal}>
+            {selectedProduct.image && (
+              <img
+                src={selectedProduct.image}
+                alt={selectedProduct.name}
+                style={styles.modalImage}
+              />
+            )}
+
+            <h2>{selectedProduct.name}</h2>
+
+            <p style={styles.muted}>
+              {selectedProduct.description || "No description available."}
+            </p>
+
+            <h3>{Number(selectedProduct.price).toLocaleString()} FCFA</h3>
+
+            <button
+              style={styles.addButton}
+              onClick={() => {
+                addToCart(selectedProduct);
+                setSelectedProduct(null);
+              }}
+            >
+              Add to Cart
+            </button>
+
+            <button
+              style={styles.closeModalBtn}
+              onClick={() => setSelectedProduct(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {cartOpen && (
         <div style={styles.overlay}>
@@ -1102,21 +1173,70 @@ const styles = {
     fontWeight: "900",
     margin: "4px 0"
   },
+  viewBtn: {
+    width: "100%",
+    marginTop: "8px",
+    border: "1px solid #f97316",
+    background: "white",
+    color: "#f97316",
+    borderRadius: "8px",
+    padding: "10px",
+    fontWeight: "900",
+    cursor: "pointer"
+  },
   addButton: {
     width: "100%",
-    marginTop: "10px",
+    marginTop: "8px",
     border: "none",
     background: "#f97316",
     color: "white",
     borderRadius: "8px",
     padding: "11px",
-    fontWeight: "900"
+    fontWeight: "900",
+    cursor: "pointer"
   },
   trustSection: {
     margin: "24px 0",
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
     gap: "12px"
+  },
+  modalOverlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.6)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 3000,
+    padding: "16px"
+  },
+  modal: {
+    background: "white",
+    borderRadius: "16px",
+    padding: "20px",
+    maxWidth: "420px",
+    width: "100%",
+    maxHeight: "90vh",
+    overflowY: "auto"
+  },
+  modalImage: {
+    width: "100%",
+    height: "220px",
+    objectFit: "cover",
+    borderRadius: "12px",
+    marginBottom: "12px"
+  },
+  closeModalBtn: {
+    width: "100%",
+    marginTop: "10px",
+    border: "none",
+    background: "#111827",
+    color: "white",
+    borderRadius: "8px",
+    padding: "11px",
+    fontWeight: "900",
+    cursor: "pointer"
   },
   overlay: {
     position: "fixed",

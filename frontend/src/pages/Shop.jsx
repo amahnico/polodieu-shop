@@ -715,11 +715,11 @@ function Shop() {
         </section>
       </main>
 
-      {selectedProduct && (
+{selectedProduct && (
   <div style={styles.modalOverlay}>
     <div style={styles.modalFlex}>
 
-      {/* LEFT IMAGE SECTION */}
+      {/* LEFT IMAGE */}
       <div style={styles.modalLeft}>
         <img
           src={selectedProduct.image}
@@ -740,7 +740,9 @@ function Shop() {
       <div style={styles.modalRight}>
         <h2>{selectedProduct.name}</h2>
 
-        <p style={styles.rating}>★★★★★ ({getRating(selectedProduct)})</p>
+        <p style={styles.rating}>
+          ★★★★★ ({getRating(selectedProduct)})
+        </p>
 
         <p style={styles.oldPrice}>
           {getOldPrice(selectedProduct).toLocaleString()} FCFA
@@ -775,35 +777,7 @@ function Shop() {
     </div>
   </div>
 )}
-
-            <h2>{selectedProduct.name}</h2>
-
-            <p style={styles.muted}>
-              {selectedProduct.description || "No description available."}
-            </p>
-
-            <h3>{Number(selectedProduct.price).toLocaleString()} FCFA</h3>
-
-            <button
-              style={styles.addButton}
-              onClick={() => {
-                addToCart(selectedProduct);
-                setSelectedProduct(null);
-              }}
-            >
-              Add to Cart
-            </button>
-
-            <button
-              style={styles.closeModalBtn}
-              onClick={() => setSelectedProduct(null)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
+      
       {cartOpen && (
         <div style={styles.overlay}>
           <aside style={styles.drawer}>

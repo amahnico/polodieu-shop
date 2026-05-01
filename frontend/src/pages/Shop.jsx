@@ -600,7 +600,11 @@ function Shop() {
             >
               {products.slice(0, 4).map((p) => (
                 <div key={p.id} style={styles.flashCard}>
-                  <img src={p.image} alt={p.name} style={styles.flashImage} />
+                 <img
+  src={p.images?.[0] || p.image}
+  alt={p.name}
+  style={styles.flashImage}
+/>
                   <b>{p.name}</b>
                   <p style={styles.oldPrice}>
                     {getOldPrice(p).toLocaleString()} FCFA

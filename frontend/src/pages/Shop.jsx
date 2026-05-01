@@ -716,15 +716,65 @@ function Shop() {
       </main>
 
       {selectedProduct && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            {selectedProduct.image && (
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
-                style={styles.modalImage}
-              />
-            )}
+  <div style={styles.modalOverlay}>
+    <div style={styles.modalFlex}>
+
+      {/* LEFT IMAGE SECTION */}
+      <div style={styles.modalLeft}>
+        <img
+          src={selectedProduct.image}
+          alt={selectedProduct.name}
+          style={styles.mainImage}
+        />
+
+        <div style={styles.thumbnailRow}>
+          {[selectedProduct.image, selectedProduct.image, selectedProduct.image].map(
+            (img, i) => (
+              <img key={i} src={img} style={styles.thumb} />
+            )
+          )}
+        </div>
+      </div>
+
+      {/* RIGHT DETAILS */}
+      <div style={styles.modalRight}>
+        <h2>{selectedProduct.name}</h2>
+
+        <p style={styles.rating}>★★★★★ ({getRating(selectedProduct)})</p>
+
+        <p style={styles.oldPrice}>
+          {getOldPrice(selectedProduct).toLocaleString()} FCFA
+        </p>
+
+        <h3 style={styles.price}>
+          {Number(selectedProduct.price).toLocaleString()} FCFA
+        </h3>
+
+        <p style={styles.muted}>
+          {selectedProduct.description || "High quality product"}
+        </p>
+
+        <button
+          style={styles.addButton}
+          onClick={() => {
+            addToCart(selectedProduct);
+            setSelectedProduct(null);
+          }}
+        >
+          Add to Cart
+        </button>
+
+        <button
+          style={styles.closeModalBtn}
+          onClick={() => setSelectedProduct(null)}
+        >
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
 
             <h2>{selectedProduct.name}</h2>
 
@@ -1375,7 +1425,48 @@ const styles = {
     fontWeight: "800",
     color: "#111827",
     padding: "10px 4px"
-  }
+  },
+  modalFlex: {
+  background: "white",
+  borderRadius: "16px",
+  padding: "20px",
+  maxWidth: "900px",
+  width: "100%",
+  display: "flex",
+  gap: "20px",
+  flexWrap: "wrap"
+},
+
+modalLeft: {
+  flex: 1,
+  minWidth: "250px"
+},
+
+modalRight: {
+  flex: 1,
+  minWidth: "250px"
+},
+
+mainImage: {
+  width: "100%",
+  height: "300px",
+  objectFit: "cover",
+  borderRadius: "12px"
+},
+
+thumbnailRow: {
+  display: "flex",
+  gap: "8px",
+  marginTop: "10px"
+},
+
+thumb: {
+  width: "60px",
+  height: "60px",
+  objectFit: "cover",
+  borderRadius: "8px",
+  border: "2px solid #eee"
+},
 };
 
 export default Shop;

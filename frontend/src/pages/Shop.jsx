@@ -1430,21 +1430,19 @@ const styles = {
   background: "white",
   borderRadius: "16px",
   padding: "20px",
-  maxWidth: "900px",
-  width: "100%",
+  maxWidth: "1000px",
+  width: "95%",
   display: "flex",
   gap: "20px",
-  flexWrap: "wrap"
+  flexDirection: window.innerWidth < 768 ? "column" : "row"
 },
 
 modalLeft: {
-  flex: 1,
-  minWidth: "250px"
+  flex: 1
 },
 
 modalRight: {
-  flex: 1,
-  minWidth: "250px"
+  flex: 1
 },
 
 mainImage: {

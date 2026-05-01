@@ -728,11 +728,16 @@ function Shop() {
         />
 
         <div style={styles.thumbnailRow}>
-          {[selectedProduct.image, selectedProduct.image, selectedProduct.image].map(
-            (img, i) => (
-              <img key={i} src={img} style={styles.thumb} />
-            )
-          )}
+          {[
+  selectedProduct.image,
+  selectedProduct.image,
+  selectedProduct.image,
+  selectedProduct.image,
+  selectedProduct.image
+].map((img, i) => (
+  <img key={i} src={img} style={styles.thumb} />
+))}
+           
         </div>
       </div>
 
@@ -1429,13 +1434,14 @@ mainImage: {
 },
 
 thumbnailRow: {
-  display: "flex",
+  display: "grid",
+  gridTemplateColumns: "repeat(5, 1fr)",
   gap: "8px",
   marginTop: "10px"
 },
 
 thumb: {
-  width: "60px",
+  width: "100%",
   height: "60px",
   objectFit: "cover",
   borderRadius: "8px",

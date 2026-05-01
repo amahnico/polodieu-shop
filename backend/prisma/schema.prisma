@@ -24,7 +24,8 @@ model Product {
   category    String
   price       Int
   oldPrice    Int?
-  image       String
+  image       String?   // keep old single image for compatibility
+  images      String[]  // new multiple images
   description String?
   stock       Int      @default(0)
   orderItems  OrderItem[]

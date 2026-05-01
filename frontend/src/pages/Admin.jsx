@@ -44,18 +44,22 @@ function Admin() {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_URL}/products`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: cleanName,
-          price: Number(cleanPrice),
-          stock: Number(cleanStock),
-          category: category.trim() || "General",
-          image: image.trim(),
-          description: description.trim()
-        })
-      });
+      const formData = new FormData();
+
+formData.append("name", cleanName);
+formData.append("price", cleanPrice);
+formData.append("stock", cleanStock);
+formData.append("category", category.trim() || "General");
+formData.append("description", description.trim());
+
+images.forEach((file) => {
+  formData.append("images", file);
+});
+
+const res = await fetch(`${API_URL}/products`, {
+  method: "POST",
+  body: formData
+});
 
       if (!res.ok) {
         const error = await res.json();
@@ -143,17 +147,20 @@ function Admin() {
 
           <input
             style={styles.input}
-            placeholder="Image URL"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
+ <input
+  type="file"
+  accept="image/*"
+  multiple
+  style={styles.input}
+  onChange={(e) => setImages(Array.from(e.target.files))}
+/>
 
-          <textarea
-            style={{ ...styles.input, minHeight: "110px" }}
-            placeholder="Product description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+<textarea
+  style={{ ...styles.input, minHeight: "110px" }}
+  placeholder="Product description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+/>
 
           <button type="submit" style={styles.addBtn} disabled={loading}>
             {loading ? "Adding..." : "Add Product"}

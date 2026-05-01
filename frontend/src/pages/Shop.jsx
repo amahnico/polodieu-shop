@@ -1430,11 +1430,13 @@ const styles = {
   background: "white",
   borderRadius: "16px",
   padding: "20px",
-  maxWidth: "1000px",
-  width: "95%",
-  display: "flex",
-  gap: "20px",
-  flexDirection: window.innerWidth < 768 ? "column" : "row"
+  maxWidth: "1100px",
+  width: "95vw",
+  display: "grid",
+  gridTemplateColumns: "1.2fr 1fr",
+  gap: "24px",
+  maxHeight: "90vh",
+  overflowY: "auto"
 },
 
 modalLeft: {
@@ -1447,7 +1449,7 @@ modalRight: {
 
 mainImage: {
   width: "100%",
-  height: "300px",
+  height: "420px",
   objectFit: "cover",
   borderRadius: "12px"
 },

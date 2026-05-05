@@ -241,13 +241,235 @@ const defaultCategories = [
   "Furniture",
   "Home & Office"
 ];
-
+const megaCategories = [
+  {
+    title: "Phones And Tablets",
+    groups: [
+      {
+        heading: "Phones And Tablets",
+        items: [
+          "Téléphones Par Types",
+          "Smartphones par marques",
+          "Phone Accessories",
+          "Tablettes",
+          "Landline Phones",
+          "Top Collections",
+        ],
+      },
+      {
+        heading: "Apple",
+        items: ["Iphone", "Apple Mac", "Ipads", "Autres Accessoires Apple"],
+      },
+    ],
+  },
+  {
+    title: "Informatique",
+    groups: [
+      {
+        heading: "Informatique",
+        items: [
+          "Ordinateurs portables",
+          "Computers and Peripherals",
+          "Data Storage",
+          "Ordinateurs de bureau",
+          "Imprimantes et scanners",
+          "Top Marques",
+          "Top Collections",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Gaming et jeux videos",
+    groups: [
+      {
+        heading: "Gaming et jeux videos",
+        items: ["Playstation", "XBOX", "Gaming PC", "Nintendo"],
+      },
+    ],
+  },
+  {
+    title: "Gros électroménager",
+    groups: [
+      {
+        heading: "Gros électroménager",
+        items: [
+          "Refrigerators and Freezers",
+          "Gas Stoves and Plates",
+          "Washing and Drying Machines",
+          "Climatiseurs et ventilateurs",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Small Appliances",
+    groups: [
+      {
+        heading: "Small Appliances",
+        items: [
+          "Cuisine et art de la table",
+          "Household Appliances",
+          "Appareils de patisserie et jus",
+          "Appareils pour petit dej",
+          "Appareils de cuisson",
+          "Blender et hachoir",
+          "Appareils pour la Transformation",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Electronique",
+    groups: [
+      {
+        heading: "Electronique",
+        items: [
+          "Televisions",
+          "Instruments de musique",
+          "Accessoires TV",
+          "Electricity",
+          "Audio & HIFI",
+        ],
+      },
+      {
+        heading: "Reseau et Telecom",
+        items: [
+          "Communication",
+          "Connectiques WIFI",
+          "Nos Boutiques",
+          "Énergie Solaire et Électrique",
+          "Our Phone Solutions for Business",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Electronic Security",
+    groups: [
+      {
+        heading: "Electronic Security",
+        items: [
+          "Alarm incendie",
+          "Esser",
+          "GPS et navigation",
+          "Bill Counter and Detector",
+          "Videosurveillance",
+          "Alarm intrusion",
+          "Nos boutiques",
+          "Nos top marques",
+          "Contrôle d'Accès",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Bureau & Maison",
+    groups: [
+      {
+        heading: "Bureau & Maison",
+        items: [
+          "Chambre et literie",
+          "Sale de bain",
+          "Salon et sale a manger",
+          "Decoration",
+          "Bureau",
+          "Seasonal Decoration",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Outillage et EPI",
+    groups: [
+      {
+        heading: "Outillage et EPI",
+        items: [
+          "Electric Tools",
+          "Outillage stationnaire",
+          "Hand Tools",
+          "Construction Material",
+          "Nettoyage",
+          "EPI",
+          "Welding Material",
+          "Generators",
+          "Jardinage",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Supermarket",
+    groups: [
+      {
+        heading: "Supermarket",
+        items: [
+          "ALIMENTAIRE",
+          "PETIT DEJEUNER",
+          "ENTRETIENT ET DIVERS",
+          "TOILETTE",
+          "ENFANTS ET NOURRISSONS",
+        ],
+      },
+    ],
+  },
+  {
+    title: "LA CAVE",
+    groups: [
+      {
+        heading: "LA CAVE",
+        items: [
+          "Vins-Grands Crus",
+          "Champagnes & autres bulles",
+          "Sélection Alcools",
+          "Bières & Cidres",
+          "La cave sans alcool",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Fashion",
+    groups: [
+      {
+        heading: "Fashion",
+        items: [
+          "Chaussure femme",
+          "Accessoire homme",
+          "Couture africaine",
+          "Chaussure homme",
+          "Accessoire femme",
+          "Women's Clothing",
+          "Men's Clothing",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Beauty and Wellness",
+    groups: [{ heading: "Beauty and Wellness", items: [] }],
+  },
+  {
+    title: "Cinematography",
+    groups: [
+      {
+        heading: "Cinematography",
+        items: ["Appareils Photo", "Caméras", "Matériels d'Observation"],
+      },
+    ],
+  },
+  {
+    title: "ENFANTS ET MATERNITE",
+    groups: [{ heading: "ENFANTS ET MATERNITE", items: [] }],
+  },
+];
 function Shop() {
   const [products, setProducts] = useState([]);
   const [slide, setSlide] = useState(0);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [activeMega, setActiveMega] = useState(null);
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -518,25 +740,70 @@ function Shop() {
           gridTemplateColumns: isMobile ? "1fr" : "250px 1fr"
         }}
       >
-        <aside style={isMobile ? styles.mobileCategories : styles.sidebar}>
-          {!isMobile && <h3 style={styles.sidebarTitle}>Categories</h3>}
+       <aside style={isMobile ? styles.mobileCategories : styles.sidebar}>
+  {!isMobile && <h3 style={styles.sidebarTitle}>Toutes les catégories</h3>}
 
-          {categories.map((cat) => (
+  {megaCategories.map((cat) => (
+    <div key={cat.title} style={styles.megaItemWrap}>
+      <button
+        style={styles.megaCategoryBtn}
+        onMouseEnter={() => !isMobile && setActiveMega(cat)}
+        onClick={() => {
+          setCategory(cat.title);
+          if (isMobile) setActiveMega(activeMega?.title === cat.title ? null : cat);
+        }}
+      >
+        <span>{cat.title}</span>
+        <span>›</span>
+      </button>
+
+      {isMobile && activeMega?.title === cat.title && (
+        <div style={styles.mobileMegaPanel}>
+          {cat.groups.map((group) => (
+            <div key={group.heading}>
+              <h4 style={styles.megaHeading}>{group.heading}</h4>
+              {group.items.map((item) => (
+                <button
+                  key={item}
+                  style={styles.megaSubItem}
+                  onClick={() => setSearch(item)}
+                >
+                  {item} <span>›</span>
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  ))}
+
+  {!isMobile && activeMega && (
+    <div
+      style={styles.megaPanel}
+      onMouseLeave={() => setActiveMega(null)}
+    >
+      {activeMega.groups.map((group) => (
+        <div key={group.heading} style={styles.megaGroup}>
+          <h3 style={styles.megaHeading}>{group.heading}</h3>
+
+          {group.items.map((item) => (
             <button
-              key={cat}
-              style={{
-                ...styles.sideCategory,
-                minWidth: isMobile ? "140px" : "100%",
-                marginBottom: isMobile ? 0 : "4px",
-                background: category === cat ? "#f97316" : "transparent",
-                color: category === cat ? "white" : "#111827"
+              key={item}
+              style={styles.megaSubItem}
+              onClick={() => {
+                setSearch(item);
+                setActiveMega(null);
               }}
-              onClick={() => setCategory(cat)}
             >
-              {cat === "ALL" ? "All Categories" : cat}
+              {item} <span>›</span>
             </button>
           ))}
-        </aside>
+        </div>
+      ))}
+    </div>
+  )}
+</aside>
 
         <section style={styles.content}>
           <section
@@ -653,21 +920,21 @@ function Shop() {
             {filteredProducts.map((p) => (
               <article key={p.id} style={styles.card}>
                 <div style={styles.imageWrap}>
-                  <span style={styles.discountBadge}>-{getDiscount(p)}%</span>
+  <span style={styles.discountBadge}>-{getDiscount(p)}%</span>
 
-                  {p.image ? (
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      style={{
-                        ...styles.image,
-                        height: isMobile ? "130px" : "210px"
-                      }}
-                    />
-                  ) : (
-                    <div style={styles.noImage}>No Image</div>
-                  )}
-                </div>
+  {p.images?.[0] || p.image ? (
+  <img
+    src={p.images?.[0] || p.image}
+    alt={p.name}
+    style={{
+      ...styles.image,
+      height: isMobile ? "130px" : "210px"
+    }}
+  />
+) : (
+  <div style={styles.noImage}>No Image</div>
+)}
+</div>
 
                 <div
                   style={{
@@ -1450,6 +1717,70 @@ thumb: {
   objectFit: "cover",
   borderRadius: "8px",
   border: "2px solid #eee"
+},
+megaItemWrap: {
+  position: "relative",
+},
+
+megaCategoryBtn: {
+  width: "100%",
+  border: "none",
+  background: "white",
+  color: "#111827",
+  padding: "15px 12px",
+  fontSize: "15px",
+  fontWeight: "700",
+  cursor: "pointer",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  borderBottom: "1px solid #f1f5f9",
+},
+
+megaPanel: {
+  position: "fixed",
+  left: "280px",
+  top: "170px",
+  width: "430px",
+  maxHeight: "75vh",
+  overflowY: "auto",
+  background: "white",
+  boxShadow: "0 18px 45px rgba(0,0,0,0.18)",
+  borderRadius: "0 14px 14px 0",
+  padding: "20px",
+  zIndex: 2000,
+},
+
+megaGroup: {
+  marginBottom: "22px",
+},
+
+megaHeading: {
+  margin: "0 0 12px",
+  fontSize: "21px",
+  fontWeight: "900",
+  color: "#020617",
+},
+
+megaSubItem: {
+  width: "100%",
+  border: "none",
+  background: "transparent",
+  padding: "12px 10px",
+  textAlign: "left",
+  fontSize: "16px",
+  color: "#1f2937",
+  cursor: "pointer",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+},
+
+mobileMegaPanel: {
+  background: "#fff",
+  padding: "10px",
+  borderRadius: "10px",
+  boxShadow: "inset 0 0 0 1px #e5e7eb",
 },
 };
 

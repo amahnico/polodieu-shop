@@ -1,6 +1,6 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import pkg from "@prisma/client";
 import bcrypt from "bcrypt";
 
@@ -12,10 +12,7 @@ import paymentRoute from "./routes/payment.js";
 const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
-dotenv.config();
-
 const app = express();
-
 /*
   🔐 IMPORTANT:
   Replace this hash with the one you generated using hash.js
